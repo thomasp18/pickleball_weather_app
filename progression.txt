@@ -24,4 +24,4 @@
             - await is required for async methods and functions, making them wait for a Promise
         - made a variable to use the aforementioned function to get the data using the weather API link
         - sent that data to the frontend with the res.send() function with the response variable in its arguments that contains both the weather
-          data and our optimal conditions per day based on the data 
+          data and our optimal conditions per day based on the data
