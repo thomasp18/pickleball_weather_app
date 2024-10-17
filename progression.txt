@@ -1,0 +1,27 @@
+1. tic tac toe
+    - React fragments
+    - surround in squiggly brackets to call JS objects
+    - slice() function creates a copy of an array
+    - => function defines a function 
+    - <Component /> syntax renders that component in the main function
+    - .useState() is used to remember things... "It just works" - Todd Howard
+    - JSX className= attribute is equivalent to HTML class= to apply CSS classes to elements
+    - .map() function creates a copy of the array and iterates through it, modifying its elements with a callback function
+    - giving a list a key is its identifier
+2. create weather app
+    - created placeholder API array of JS objects representing weather statistics
+    - created a WeatherData function that takes in the API's data in its arguments and displays each variable using the map function
+      to loop through the API data and return each variable with the date as its key to be its unique identifier
+3. implement our api
+    - used express to connect to the API 
+    - created a function that defines our optimal weather conditions based on the provided API's variables that takes in WeatherData
+      as an arguments. Assigned a new constant variable that refers to the API objects with the desired variables equal to WeatherData.
+      Created an array (peakArr) with 7 null objects to represent if a day is peak piko weather or not. 
+        - Since the API provides 7 days of weather stats, we looped through a day variable 7 times with an if statement to determine if each
+          day was had the optimal weather that we assigned.  
+    - used the app.get() routing method with '/weather' as an endpoint
+        - created a function to get the data from the weather api with 'link' as its argument
+            - await is required for async methods and functions, making them wait for a Promise
+        - made a variable to use the aforementioned function to get the data using the weather API link
+        - sent that data to the frontend with the res.send() function with the response variable in its arguments that contains both the weather
+          data and our optimal conditions per day based on the data 
