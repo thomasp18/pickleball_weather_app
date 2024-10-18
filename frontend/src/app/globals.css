@@ -17,6 +17,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  /* background-color: #121212; */
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -25,3 +26,46 @@ body {
     text-wrap: balance;
   }
 }
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.container {
+  border: 2px solid white;
+  border-radius: 5px;
+  overflow: auto;
+  padding: 10px;
+  white-space: nowrap;
+
+  background-color: #181818;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* .day {
+  border: 1px solid white;
+  border-radius: 10px;
+  margin: auto;
+  padding: 10px;
+  min-width: 400px;
+  min-height: 200px;
+
+  background-color: #282828;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} */
+
+
