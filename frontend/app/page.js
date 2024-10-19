@@ -1,8 +1,8 @@
 async function getData() {
-  const res = await fetch('http://localhost:3000/weather')
+  const res = await fetch('http://localhost:3000/api/weather')
 
   if (!res.ok) {
-      console.log(await res.text())
+    console.log(await res.text())
     throw new Error('bruhmoji')
   }
 
@@ -24,7 +24,7 @@ function WeatherData({ apiData }) {
     <>
       {apiData.map((value) => {
         return (
-          <div key={value.date}> 
+          <div key={value.date}>
             <h2>{value.date}</h2>
             <li>Temperature: {value.temperature} degrees</li>
             <li>Humidity: {value.humidity}%</li>
