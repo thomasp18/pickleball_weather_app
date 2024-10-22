@@ -1,3 +1,22 @@
+// https://stackoverflow.com/a/78714161
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "semi": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.js",
+        "*.mjs"
+      ],
+      // This is the default parser of ESLint
+      "parser": "espree",
+      "parserOptions": {
+        "ecmaVersion": "latest"
+      }
+    }
+  ]
 }
