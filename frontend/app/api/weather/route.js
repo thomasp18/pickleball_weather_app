@@ -18,14 +18,9 @@ function optCalc(WeatherData) {
   let tempWeight = 20;
   let humidWeight = 10;
   let windWeight = 5;
-  let precipWeight = 35;
+  let precipWeight = 35 - Math.min(35, precipitation);
   let wcodeWeight = 30;
 
-  if (precipitation > 0 && precipitation < 35) {
-    precipWeight -= precipitation;
-  } else if (precipitation >= 35) {
-    precipWeight = 0;
-  }
   if (!(weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
     wcodeWeight = 0;
   }
