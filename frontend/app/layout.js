@@ -1,5 +1,7 @@
 import localFont from "next/font/local";
+import 'bootstrap/dist/css/bootstrap.css';
 import "./globals.css";
+import BootstrapClient from '@/components/BootstrapClient.js';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,11 +21,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" data-bs-theme="dark">
+      <head>
+        <meta charSet="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <title>Pickleball Weather App</title>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <BootstrapClient />
       </body>
     </html>
   );
