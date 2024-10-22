@@ -24,12 +24,12 @@ function optCalc(WeatherData) {
   if (!(weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
     wcodeWeight = 0;
   }
-  if (temperature < 55 && temperature < 20) {
-    tempWeight -= temperature;
-  } else if (temperature < 55 && temperature >= 20) {
+  if (temperature <= 35) {
     tempWeight = 0;
+  } else if (temperature > 35 && temperature < 55) {
+    tempWeight -= (temperature - 55);
   } else if (temperature > 80) {
-    tempWeight -= (temperature - 80);
+    tempWeight -= Math.min(20, (temperature - 80));
   }
   if (temperature > 75) {
     if (humidity > 90) {
