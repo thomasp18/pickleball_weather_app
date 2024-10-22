@@ -1,5 +1,5 @@
 async function getData() {
-  const res = await fetch('http://localhost:3000/weather', { cache: "no-cache" })
+  const res = await fetch('http://localhost:3000/api/weather', { cache: "no-cache" })
 
   if (!res.ok) {
     console.log(await res.text())
