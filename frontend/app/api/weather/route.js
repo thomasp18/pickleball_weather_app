@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 
-const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York"
-const TIME_FOR_HUMIDITY = 19
+const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York";
+const TIME_FOR_HUMIDITY = 19;
 
 // optimal weather conditions
 // 55 to 80 degrees
@@ -9,17 +9,61 @@ const TIME_FOR_HUMIDITY = 19
 // < 10mph wind
 // 0% precipitation
 // clouds: clear, mostly clear, partly cloudy, overcast
+
+// precipitation highest, weathercode high, temp mid, humid low, wind lowest
+// 35 + 30 + 20 + 10 + 5 = 100
 function optCalc(WeatherData) {
   // 70, 80, 10, 0, partly cloudy
   const { temperature, humidity, wind, precipitation, weathercode } = WeatherData;
-  if (temperature > 55 && temperature < 80
-    && humidity < 90
-    && wind < 10
-    && precipitation === 0
-    && (weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
-    return "this is peak piko weather"
+  let tempWeight = 20;
+  let humidWeight = 10;
+  let windWeight = 5;
+  let precipWeight = 35;
+  let wcodeWeight = 30;
+
+  if (precipitation > 0 && precipitation < 35) {
+    precipWeight -= precipitation;
+  } else if (precipitation >= 35) {
+    precipWeight = 0;
   }
-  return "kms"
+  if (!(weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
+    wcodeWeight = 0;
+  }
+  if (temperature < 55 && temperature < 20) {
+    tempWeight -= temperature;
+  } else if (temperature < 55 && temperature >= 20) {
+    tempWeight = 0;
+  } else if (temperature > 80) {
+    tempWeight -= (temperature - 80);
+  }
+  if (temperature > 75) {
+    if (humidity > 90) {
+      humidWeight -= (humidity - 90);
+    }
+  } else {
+    if (humidity > 90) {
+      humidWeight -= (humidity - 90) / 2;
+    }
+  }
+  if (wind > 10) {
+    windWeight = 0;
+  }
+
+  const totWeight = tempWeight + humidWeight + windWeight + precipWeight + wcodeWeight;
+
+  if (totWeight > 80) {
+    return "this is peak piko weather";
+  }
+  return "kms";
+
+  // if (temperature > 55 && temperature < 80
+  //   && humidity < 90
+  //   && wind < 10
+  //   && precipitation === 0
+  //   && (weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
+  //   return "this is peak piko weather";
+  // }
+  // return "kms";
 }
 
 let code = {
@@ -47,11 +91,11 @@ function formatWeatherData(WeatherData) {
     formatted[day].wind = daily.wind_speed_10m_max[day];
     formatted[day].precipitation = daily.precipitation_probability_max[day];
     formatted[day].weathercode = dataCode;
-    const judgementForDay = optCalc(formatted[day])
+    const judgementForDay = optCalc(formatted[day]);
     formatted[day].weathercode = code[dataCode];
     formatted[day].judgement = judgementForDay;
   }
-  return formatted
+  return formatted;
 }
 
 export async function GET() {
@@ -70,5 +114,5 @@ export async function GET() {
   const formattedData = formatWeatherData(wdata);
 
   // send that data to the frontend
-  return NextResponse.json(formattedData)
+  return NextResponse.json(formattedData);
 }
