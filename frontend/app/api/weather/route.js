@@ -70,7 +70,7 @@ let code = {
   71: "Slight snow fall", 73: "Moderate snow fall", 75: "Heavy snow fall",
   77: "Snow grains", 80: "Slight rain showers", 81: "Moderate rain showers", 82: "Violent rain showers",
   85: "Slight snow showers", 86: "Heavy snow showers", 95: "Slight or moderate thunderstorm",
-  96: "Slight hail thunderstorm", 99: "Heavy hail thunderstorm",
+  96: "Slight hail thunderstorm", 99: "Heavy hail thunderstorm"
 };
 
 function formatWeatherData(WeatherData) {
@@ -96,7 +96,7 @@ function formatWeatherData(WeatherData) {
 export async function GET() {
   // function to get data from a URL
   async function getWeather(link) {
-    let res = await fetch(link);
+    let res = await fetch(link, { cache: 'no-cache' });
     if (res.ok) {
       return await res.json();
     }
