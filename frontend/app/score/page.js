@@ -45,7 +45,7 @@ export default function Score() {
       <div className='d-flex flex-column align-items-center'>
         <h3>Playing {gameType} to {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points</h3>
         <div style={{ minHeight: 150, textAlign: 'center' }}>
-          <p style={{ textAlign: 'center', fontStyle: 'italic' }}>Team <b>{possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> has <b>{serveCounter}</b> serve(s)</>}</p>
+          <p style={{ textAlign: 'center', fontStyle: 'italic' }}><b className={possession === 'A' ? 'text-primary' : 'text-danger'}>Team {possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> has <b>{serveCounter}</b> serve(s)</>}</p>
           {winner && <p>Team <b>{winner}</b> won! {randomEmoji()}</p>}
           {winner && <button className='btn btn-danger' onClick={() => {
             resetGame();
@@ -95,7 +95,7 @@ export default function Score() {
 function ScoreButton({ team, inPossession, setPossession, serveCounter, setServeCounter, gameType, score, setScore, disabled }) {
   return (
     <>
-      <button className={`btn btn-primary btn-lg ${disabled && 'disabled'}`} onClick={() => {
+      <button className={`btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`} onClick={() => {
         if (inPossession) {
           setScore(score + 1);
         } else if (gameType === 'Doubles') {
@@ -132,7 +132,7 @@ function WinnerModal({ winner, resetGame }) {
           <Modal.Title>Winner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Team <b>{winner}</b> won! {randomEmoji()}
+          <b>Team {winner}</b> won! {randomEmoji()}
         </Modal.Body>
         <Modal.Footer>
           <Button variant='danger' onClick={resetGame}>Reset game</Button>
