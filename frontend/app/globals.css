@@ -27,11 +27,30 @@ body {
   }
 }
 
+div.scrollmenu {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+div.scrollmenu a {
+  display: inline-block;
+  text-align: center;
+  padding: 14px;
+}
+
+div.scrollmenu a:hover {
+  background-color: #777;
+}
+
 footer {
-  position: fixed;
+  position: relative;
   left: 0;
+  right: 0;
   bottom: 0;
   width: 100%;
+  height: 50px;
   text-align: center;
   background-color: #282828;
 }
+
+footer p {}

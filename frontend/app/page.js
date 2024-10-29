@@ -1,3 +1,4 @@
+// Gets the data from our API in the backend
 async function getData() {
   const res = await fetch('http://localhost:3000/api/weather', { cache: 'no-cache' });
 
@@ -9,30 +10,33 @@ async function getData() {
   return res.json();
 }
 
+// Main component
 export default async function Home() {
   const data = await getData();
 
   return (
     <div>
-      <h1 className='display-1' style={{ textAlign: "center", padding: "auto", margin: "auto", marginTop: "5%" }}>PikoWeatherer</h1>
+      <h1 className='display-1' style={{ textAlign: "center", padding: "auto", margin: "auto", marginTop: "1%" }}>PikoWeatherer</h1>
       <br />
       <div style={{ textAlign: "center" }}>
         <WeatherData apiData={data} />
       </div>
       <br />
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center", marginBottom: "2.3%" }}>
         <a className="btn btn-primary" href="/score">Play Now!</a>
       </div>
     </div>);
 }
 
-// Component
+// Displays the weather data in a more readable state
 function WeatherData({ apiData }) {
-  // const currentDate = new Date().toJSON().slice(0, 10);
-
+  // Seperate the API data from today and the rest of the week
   const todayData = apiData[0];
-  // do somethign special for `todayData`
   const future = apiData.slice(1, 7);
+
+  let weekday = {
+    0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'
+  };
 
   let icon = {
     "Clear sky": "qi-100", "Mainly clear": "qi-102", "Partly cloudy": "qi-103", "Overcast": "qi-104", "Fog": "qi-501",
@@ -49,7 +53,7 @@ function WeatherData({ apiData }) {
 
   return (
     <>
-      {/* carousel */}
+      {/* Weather data carousel */}
       <div className="container-sm">
         <div id="weatherCarousel" className="carousel slide">
           <div className="carousel-indicators">
@@ -70,8 +74,8 @@ function WeatherData({ apiData }) {
                       <i className={todayWIcon} style={{ fontSize: "150px" }}></i>
                       <div className='card-body' style={{ textAlign: "center" }}>
                         <div style={{ display: "inline-block", textAlign: "left" }}>
-                          <h5><b>Today</b></h5>
-                          <p className='card-title'><small className='text-body-secondary'>{todayData.date}</small></p>
+                          <h5 style={{ marginBottom: "0%" }}><b>Today</b></h5>
+                          <p className="card-title" style={{ marginTop: "0%" }}><small className='text-body-secondary'>{todayData.date}</small></p>
                           <li className='card-text'>Temperature: {todayData.temperature}°F</li>
                           <li className='card-text'>Humidity: {todayData.humidity}%</li>
                           <li className='card-text'>Wind: {todayData.wind} mph</li>
@@ -93,10 +97,6 @@ function WeatherData({ apiData }) {
               </div>
             </div>
             {future.map((value) => {
-              let weekday = {
-                0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'
-              };
-
               let apiDate = value.date;
               const d = new Date(apiDate);
               let day = weekday[d.getDay()];
@@ -108,8 +108,8 @@ function WeatherData({ apiData }) {
                     <i className={weatherIcon} style={{ fontSize: "150px" }}></i>
                     <div className='card-body' style={{ textAlign: "center" }}>
                       <div style={{ display: "inline-block", textAlign: "left" }}>
-                        <h5><b>{day}</b></h5>
-                        <p className='card-title'><small className='text-body-secondary'>{apiDate}</small></p>
+                        <h5 style={{ marginBottom: "0%" }}><b>{day}</b></h5>
+                        <p className='card-title' style={{ marginTop: "0%" }}><small className='text-body-secondary'>{apiDate}</small></p>
                         <li className='card-text'>Temperature: {value.temperature}°F</li>
                         <li className='card-text'>Humidity: {value.humidity}%</li>
                         <li className='card-text'>Wind: {value.wind} mph</li>
@@ -141,62 +141,25 @@ function WeatherData({ apiData }) {
         </div>
       </div>
 
-      {/* <div className='container-fluid'>
-        <div className='row justify-content-center'>
-          <div className='col-sm-2'>
-            <div className='card'>
-              <div className='card-body'>
-                <h5><b>Today</b></h5>
-                <p className='card-title'><small className='text-body-secondary'>{todayData.date}</small></p>
-                <li className='card-text'>Temperature: {todayData.temperature}°</li>
-                <li className='card-text'>Humidity: {todayData.humidity}%</li>
-                <li className='card-text'>Wind: {todayData.wind} mph</li>
-                <li className='card-text'>Rain Chance: {todayData.precipitation}%</li>
-                <li className='card-text'>Weather Condition: {todayData.weathercode}</li>
-              </div>
-              <div className='card-footer'>
-                <div className='row justify-content-end'>
-                  <p className='card-text'>Judgement: <b>{todayData.judgement}</b></p>
-                </div>
-              </div>
-            </div>
-          </div>
+      <br />
+
+      {/* Scroll menu for the weekdays */}
+      <div className='scrollmenu'>
+        <div className="btn-group" role="group" aria-label="Basic example">
+          {apiData.map((value, index) => {
+            const d = new Date(value.date);
+            let day = weekday[d.getDay()];
+
+            return (
+              <button key={value.date} type="button" className="btn btn-secondary" data-bs-target="#weatherCarousel" data-bs-slide-to={index}>
+                <b>{day}</b>
+                <h1>{value.temperature}°F</h1>
+              </button>
+            );
+
+          })}
         </div>
-      </div> */}
-
-      {/* <div className='card-group'>
-        {future.map((value) => {
-          let weekday = {
-            0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'
-          };
-
-          let apiDate = value.date;
-          const d = new Date(apiDate);
-          let day = weekday[d.getDay()];
-          // if (apiDate === currentDate) {
-          //   apiDate = 'Today';
-          // }
-
-          return (
-            <div key={apiDate} className='card'>
-              <div className='card-body'>
-                <h5><b>{day}</b></h5>
-                <p className='card-title'><small className='text-body-secondary'>{apiDate}</small></p>
-                <li className='card-text'>Temperature: {value.temperature}°</li>
-                <li className='card-text'>Humidity: {value.humidity}%</li>
-                <li className='card-text'>Wind: {value.wind} mph</li>
-                <li className='card-text'>Rain Chance: {value.precipitation}%</li>
-                <li className='card-text'>Weather Condition: {value.weathercode}</li>
-              </div>
-              <div className='card-footer'>
-                <div className='row justify-content-end'>
-                  <p className='card-text'>Judgement: <b>{value.judgement}</b></p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div> */}
+      </div>
     </>
   );
 }
