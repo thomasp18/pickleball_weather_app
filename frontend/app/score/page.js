@@ -8,7 +8,7 @@ export default function Score() {
   const [gameType, setGameType] = useState('Doubles');
   const [playToScore, setPlayToScore] = useState(11);
   const [possession, setPossession] = useState('A');
-  const [serveCounter, setServeCounter] = useState(1);
+  const [serveCounter, setServeCounter] = useState(2);
   const [aScore, setAScore] = useState(0);
   const [bScore, setBScore] = useState(0);
   const winner = determineWinner(aScore, bScore, playToScore);
@@ -18,7 +18,7 @@ export default function Score() {
     setAScore(0);
     setBScore(0);
     setPossession('A');
-    setServeCounter(1);
+    setServeCounter(2);
   }
 
   return (
@@ -45,7 +45,7 @@ export default function Score() {
       <div className='d-flex flex-column align-items-center'>
         <h3>Playing {gameType} to {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points</h3>
         <div style={{ minHeight: 150, textAlign: 'center' }}>
-          <p style={{ textAlign: 'center', fontStyle: 'italic' }}><b className={possession === 'A' ? 'text-primary' : 'text-danger'}>Team {possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> has <b>{serveCounter}</b> serve(s)</>}</p>
+          <p style={{ textAlign: 'center', fontStyle: 'italic' }}><b className={possession === 'A' ? 'text-primary' : 'text-danger'}>Team {possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> is on serve <b>{serveCounter}</b></>}</p>
           {winner && <p>Team <b>{winner}</b> won! {randomEmoji()}</p>}
           {winner && <button className='btn btn-danger' onClick={() => {
             resetGame();
@@ -99,11 +99,11 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
         if (inPossession) {
           setScore(score + 1);
         } else if (gameType === 'Doubles') {
-          if (serveCounter === 1) {
-            setServeCounter(2);
+          if (serveCounter === 2) {
+            setServeCounter(1);
             setPossession(team);
           } else {
-            setServeCounter(serveCounter - 1);
+            setServeCounter(serveCounter + 1);
           }
         } else {
           setPossession(team);
