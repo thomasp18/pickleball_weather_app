@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 export default function Score() {
   const [gameType, setGameType] = useState('Doubles');
@@ -11,6 +13,13 @@ export default function Score() {
   const [bScore, setBScore] = useState(0);
   const winner = determineWinner(aScore, bScore, playToScore);
   const disabled = winner ? true : false;
+
+  function resetGame() {
+    setAScore(0);
+    setBScore(0);
+    setPossession('A');
+    setServeCounter(1);
+  }
 
   return (
     <div className='container-sm d-flex flex-column mt-1'>
@@ -35,14 +44,11 @@ export default function Score() {
       {/* Game info */}
       <div className='d-flex flex-column align-items-center'>
         <h3>Playing {gameType} to {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points</h3>
-        <p style={{ textAlign: 'center', maxWidth: '80%', fontStyle: 'italic' }}>Team <b>{possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and has <b>{serveCounter}</b> serve(s)</>}</p>
-        <div style={{ minHeight: 100, textAlign: 'center' }}>
+        <div style={{ minHeight: 150, textAlign: 'center' }}>
+          <p style={{ textAlign: 'center', fontStyle: 'italic' }}>Team <b>{possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> has <b>{serveCounter}</b> serve(s)</>}</p>
           {winner && <p>Team <b>{winner}</b> won! {randomEmoji()}</p>}
           {winner && <button className='btn btn-danger' onClick={() => {
-            setAScore(0);
-            setBScore(0);
-            setPossession('A');
-            setServeCounter(1);
+            resetGame();
           }}>Reset game</button>}
         </div>
       </div>
@@ -79,12 +85,14 @@ export default function Score() {
         </div>
       </div>
 
+      {/* Modal */}
+      <WinnerModal winner={winner} resetGame={resetGame} />
+
     </div>
   );
 }
 
 function ScoreButton({ team, inPossession, setPossession, serveCounter, setServeCounter, gameType, score, setScore, disabled }) {
-
   return (
     <>
       <button className={`btn btn-primary btn-lg ${disabled && 'disabled'}`} onClick={() => {
@@ -101,6 +109,35 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
           setPossession(team);
         }
       }}>Team {team} score</button>
+    </>
+  );
+}
+
+function WinnerModal({ winner, resetGame }) {
+  const [overrideShow, setOverrideShow] = useState(true);
+
+  useEffect(() => {
+    setOverrideShow(true);
+  }, [winner]);
+
+  return (
+    <>
+      <Modal
+        show={winner && overrideShow}
+        onHide={() => setOverrideShow(false)}
+        backdrop='static'
+        keyboard={false}
+        centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Winner</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Team <b>{winner}</b> won! {randomEmoji()}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='danger' onClick={resetGame}>Reset game</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
