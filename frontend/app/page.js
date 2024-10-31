@@ -10,7 +10,7 @@ const useAxios = () => {
 
   const fetchData = () => {
     axios
-      .get('http://localhost:3000/api/weather', { cache: 'no-cache' })
+      .get('/api/weather', { cache: 'no-cache' })
       .then((res) => {
         setResponse(res.data);
       })
@@ -37,13 +37,13 @@ export default function Home() {
   if (!error && !loading) {
     return (
       <div>
-        <h1 className='display-1 text-center p-auto m-auto mt-2'>PikoWeatherer</h1>
+        <h1 className='display-1 text-center p-auto m-auto pt-2'>PikoWeatherer</h1>
         <br />
         <div className='text-center'>
           <WeatherData apiData={response} />
         </div>
         <br />
-        <div className='text-center mt-2 mb-5'>
+        <div className='text-center mt-2 mb-4'>
           <a className="btn btn-primary" href="/score">Play Now!</a>
         </div>
       </div>);
