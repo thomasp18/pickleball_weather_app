@@ -28,10 +28,10 @@ export default function RootLayout({ children }) {
         <link href="https://cdn.jsdelivr.net/npm/qweather-icons@1.3.2/font/qweather-icons.css" rel="stylesheet"></link>
         <title>Pickleball Weather App</title>
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+        <div className="placeholder">
+        </div>
         <footer>
           <p>Banana Technologies©™</p>
         </footer>
