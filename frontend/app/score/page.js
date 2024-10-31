@@ -22,7 +22,7 @@ export default function Score() {
   }
 
   return (
-    <div className='container-sm d-flex flex-column mt-1'>
+    <div className='container-sm d-flex flex-column'>
       <h1 className='display-3'>Scorekeeper</h1>
 
       {/* Settings */}
