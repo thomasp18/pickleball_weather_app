@@ -1,31 +1,55 @@
+'use client';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 // Gets the data from our API in the backend
-async function getData() {
-  const res = await fetch('http://localhost:3000/api/weather', { cache: 'no-cache' });
+const useAxios = () => {
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setloading] = useState(true);
 
-  if (!res.ok) {
-    console.log(await res.text());
-    throw new Error('bruhmoji');
-  }
+  const fetchData = () => {
+    axios
+      .get('http://localhost:3000/api/weather', { cache: 'no-cache' })
+      .then((res) => {
+        setResponse(res.data);
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        setloading(false);
+      });
+  };
 
-  return res.json();
-}
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // custom hook returns value
+  return { response, error, loading };
+};
 
 // Main component
-export default async function Home() {
-  const data = await getData();
+export default function Home() {
+  const { response, error, loading } = useAxios();
 
-  return (
-    <div>
-      <h1 className='display-1' style={{ textAlign: "center", padding: "auto", margin: "auto", marginTop: "1%" }}>PikoWeatherer</h1>
-      <br />
-      <div style={{ textAlign: "center" }}>
-        <WeatherData apiData={data} />
-      </div>
-      <br />
-      <div style={{ textAlign: "center", marginBottom: "2.3%" }}>
-        <a className="btn btn-primary" href="/score">Play Now!</a>
-      </div>
-    </div>);
+  if (!error && !loading) {
+    return (
+      <div>
+        <h1 className='display-1 text-center p-auto m-auto mt-2'>PikoWeatherer</h1>
+        <br />
+        <div className='text-center'>
+          <WeatherData apiData={response} />
+        </div>
+        <br />
+        <div className='text-center mt-2 mb-5'>
+          <a className="btn btn-primary" href="/score">Play Now!</a>
+        </div>
+      </div>);
+  } else {
+    console.log(error);
+  }
 }
 
 // Displays the weather data in a more readable state
@@ -33,6 +57,8 @@ function WeatherData({ apiData }) {
   // Seperate the API data from today and the rest of the week
   const todayData = apiData[0];
   const future = apiData.slice(1, 7);
+  const [marked, setMarked] = useState(false);
+  const markDay = marked ? "marked" : "";
 
   let weekday = {
     0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'
@@ -55,7 +81,7 @@ function WeatherData({ apiData }) {
     <>
       {/* Weather data carousel */}
       <div className="container-sm">
-        <div id="weatherCarousel" className="carousel slide">
+        <div id="weatherCarousel" className="carousel slide" data-bs-ride="false">
           <div className="carousel-indicators">
             <button type="button" data-bs-target="#weatherCarousel" data-bs-slide-to="0" className="active" aria-current="true" aria-label="wd1"></button>
             <button type="button" data-bs-target="#weatherCarousel" data-bs-slide-to="1" aria-label="wd2"></button>
@@ -68,14 +94,14 @@ function WeatherData({ apiData }) {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <div className='container-fluid'>
-                <div className='row' >
+                <div className='row'>
                   <div className='col' >
-                    <div className='card' style={{ textAlign: "center" }}>
+                    <div className='card text-center'>
                       <i className={todayWIcon} style={{ fontSize: "150px" }}></i>
-                      <div className='card-body' style={{ textAlign: "center" }}>
+                      <div className='card-body text-center'>
                         <div style={{ display: "inline-block", textAlign: "left" }}>
-                          <h5 style={{ marginBottom: "0%" }}><b>Today</b></h5>
-                          <p className="card-title" style={{ marginTop: "0%" }}><small className='text-body-secondary'>{todayData.date}</small></p>
+                          <h5 className='mb-0'><b>Today</b></h5>
+                          <p className="card-title mt-0"><small className='text-body-secondary'>{todayData.date}</small></p>
                           <li className='card-text'>Temperature: {todayData.temperature}°F</li>
                           <li className='card-text'>Humidity: {todayData.humidity}%</li>
                           <li className='card-text'>Wind: {todayData.wind} mph</li>
@@ -83,7 +109,7 @@ function WeatherData({ apiData }) {
                           <li className='card-text'>Weather Condition: {todayData.weathercode}</li>
                         </div>
                       </div>
-                      <div className='card-footer' style={{ textAlign: "center" }}>
+                      <div className='card-footer text-center'>
                         <div className='row justify-content-end'>
                           <p className='card-text'>Judgement: <b>{todayData.judgement}</b></p>
                           <br />
@@ -104,12 +130,12 @@ function WeatherData({ apiData }) {
 
               return (
                 <div key={apiDate} className="carousel-item">
-                  <div className='card' style={{ textAlign: "center" }}>
+                  <div className={`card text-center ${markDay}`}>
                     <i className={weatherIcon} style={{ fontSize: "150px" }}></i>
-                    <div className='card-body' style={{ textAlign: "center" }}>
+                    <div className='card-body text-center'>
                       <div style={{ display: "inline-block", textAlign: "left" }}>
-                        <h5 style={{ marginBottom: "0%" }}><b>{day}</b></h5>
-                        <p className='card-title' style={{ marginTop: "0%" }}><small className='text-body-secondary'>{apiDate}</small></p>
+                        <h5 className='mb-0'><b>{day}</b></h5>
+                        <p className='card-title mt-0'><small className='text-body-secondary'>{apiDate}</small></p>
                         <li className='card-text'>Temperature: {value.temperature}°F</li>
                         <li className='card-text'>Humidity: {value.humidity}%</li>
                         <li className='card-text'>Wind: {value.wind} mph</li>
@@ -117,9 +143,14 @@ function WeatherData({ apiData }) {
                         <li className='card-text'>Weather Condition: {value.weathercode}</li>
                       </div>
                     </div>
-                    <div className='card-footer' style={{ textAlign: "center" }}>
-                      <div className='row'>
-                        <p className='card-text'>Judgement: <b>{value.judgement}</b></p>
+                    <div className='card-footer text-center'>
+                      <div className='row justify-content-center'>
+                        <div className="col-sm">
+                          <p className='card-text'>Judgement: <b>{value.judgement}</b></p>
+                        </div>
+                        {/* <div className='col-sm'>
+                          <button className="btn btn-secondary" onClick={() => setMarked(!marked)}>mark</button>
+                        </div> */}
                         <br />
                         <br />
                         <br />
@@ -156,10 +187,11 @@ function WeatherData({ apiData }) {
                 <h1>{value.temperature}°F</h1>
               </button>
             );
-
           })}
         </div>
       </div>
     </>
   );
 }
+
+// (icons) https://icons.qweather.com/en/
