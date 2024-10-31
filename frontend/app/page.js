@@ -10,7 +10,7 @@ const useAxios = () => {
 
   const fetchData = () => {
     axios
-      .get('http://localhost:3000/api/weather', { cache: 'no-cache' })
+      .get('/api/weather', { cache: 'no-cache' })
       .then((res) => {
         setResponse(res.data);
       })
