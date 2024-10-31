@@ -1,18 +1,6 @@
-import localFont from "next/font/local";
-import 'bootstrap/dist/css/bootstrap.css';
-import "./globals.css";
 import BootstrapClient from './components/BootstrapClient.js';
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import Footer from './components/footer/footer.js';
+import "./globals.css";
 
 export const metadata = {
   title: "Pikoweatherer",
@@ -28,14 +16,10 @@ export default function RootLayout({ children }) {
         <link href="https://cdn.jsdelivr.net/npm/qweather-icons@1.3.2/font/qweather-icons.css" rel="stylesheet"></link>
         <title>Pickleball Weather App</title>
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
-        <div className="placeholder">
-        </div>
-        <footer>
-          <p>Banana Technologies©™</p>
-        </footer>
+      <body>
         <BootstrapClient />
+        {children}
+        <Footer />
       </body>
     </html>
   );

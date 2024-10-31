@@ -1,5 +1,5 @@
 "use client";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect } from 'react';
 
 function BootstrapClient() {
