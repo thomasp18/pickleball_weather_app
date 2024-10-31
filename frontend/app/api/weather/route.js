@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
-const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York";
+const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=38.86&longitude=-77.63&hourly=relative_humidity_2m&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York";
+//(universal timezone) "https://api.open-meteo.com/v1/forecast?latitude=38.86&longitude=-77.63&hourly=relative_humidity_2m&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=GMT";
 const TIME_FOR_HUMIDITY = 19;
 
-// optimal weather conditions
+// Optimal weather conditions
 // 55 to 80 degrees
 // < 90% humidity
 // < 10mph wind
@@ -13,7 +14,6 @@ const TIME_FOR_HUMIDITY = 19;
 // precipitation highest, weathercode high, temp mid, humid low, wind lowest
 // 35 + 30 + 20 + 10 + 5 = 100
 function optCalc(WeatherData) {
-  // 70, 80, 10, 0, partly cloudy
   const { temperature, humidity, wind, precipitation, weathercode } = WeatherData;
   let tempWeight = 20;
   let humidWeight = 10;
@@ -50,17 +50,9 @@ function optCalc(WeatherData) {
     return "this is peak piko weather";
   }
   return "kms";
-
-  // if (temperature > 55 && temperature < 80
-  //   && humidity < 90
-  //   && wind < 10
-  //   && precipitation === 0
-  //   && (weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
-  //   return "this is peak piko weather";
-  // }
-  // return "kms";
 }
 
+// Variable of objects to identify and return each day's weather code as a description
 let code = {
   0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast", 45: "Fog",
   48: "Depositing Rime Fog", 51: "Light drizzle", 53: "Moderate drizzle", 55: "Dense drizzle",
@@ -70,9 +62,10 @@ let code = {
   71: "Slight snow fall", 73: "Moderate snow fall", 75: "Heavy snow fall",
   77: "Snow grains", 80: "Slight rain showers", 81: "Moderate rain showers", 82: "Violent rain showers",
   85: "Slight snow showers", 86: "Heavy snow showers", 95: "Slight or moderate thunderstorm",
-  96: "Slight hail thunderstorm", 99: "Heavy hail thunderstorm",
+  96: "Slight hail thunderstorm", 99: "Heavy hail thunderstorm"
 };
 
+// Formats the data in a more readable state
 function formatWeatherData(WeatherData) {
   const { daily, hourly } = WeatherData;
   let formatted = [];
@@ -93,10 +86,10 @@ function formatWeatherData(WeatherData) {
   return formatted;
 }
 
+// function to get data from a URL
 export async function GET() {
-  // function to get data from a URL
   async function getWeather(link) {
-    let res = await fetch(link);
+    let res = await fetch(link, { cache: 'no-cache' });
     if (res.ok) {
       return await res.json();
     }
