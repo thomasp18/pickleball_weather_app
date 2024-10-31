@@ -43,7 +43,7 @@ export default function Home() {
           <WeatherData apiData={response} />
         </div>
         <br />
-        <div className='text-center mt-2'>
+        <div className='text-center mt-2 mb-4'>
           <a className="btn btn-primary" href="/score">Play Now!</a>
         </div>
       </div>);
