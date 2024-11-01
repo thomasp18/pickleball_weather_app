@@ -1,38 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-// Gets the data from our API in the backend
-const useAxios = () => {
-  const [response, setResponse] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setloading] = useState(true);
-
-  const fetchData = () => {
-    axios
-      .get('/api/weather', { cache: 'no-cache' })
-      .then((res) => {
-        setResponse(res.data);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setloading(false);
-      });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // custom hook returns value
-  return { response, error, loading };
-};
+import { useState } from 'react';
+import useRequest from './utils/useRequest';
 
 // Main component
 export default function Home() {
-  const { response, error, loading } = useAxios();
+  const { response, error, loading } = useRequest('GET', '/api/weather');
 
   if (!error && !loading) {
     return (
@@ -58,22 +30,22 @@ function WeatherData({ apiData }) {
   const todayData = apiData[0];
   const future = apiData.slice(1, 7);
   const [marked, setMarked] = useState(false);
-  const markDay = marked ? "marked" : "";
+  const markDay = marked ? 'marked' : '';
 
   let weekday = {
     0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'
   };
 
   let icon = {
-    "Clear sky": "qi-100", "Mainly clear": "qi-102", "Partly cloudy": "qi-103", "Overcast": "qi-104", "Fog": "qi-501",
-    "Depositing Rime Fog": "qi-2377", "Light drizzle": "qi-309", "Moderate drizzle": "qi-311", "Dense drizzle": "qi-312",
-    "Light freezing drizzle": "qi-2214", "Dense freezing drizzle": "qi-2214",
-    "Slight rain": "qi-305", "Moderate rain": "qi-306", "Heavy rain": "qi-307",
-    "Light freezing rain": "qi-313", "Heavy freezing rain": "qi-313-fill",
-    "Slight snow fall": "qi-400", "Moderate snow fall": "qi-401", "Heavy snow fall": "qi-402",
-    "Snow grains": "qi-1040", "Slight rain showers": "qi-300", "Moderate rain showers": "qi-301", "Violent rain showers": "qi-301-fill",
-    "Slight snow showers": "qi-406", "Heavy snow showers": "qi-406-fill", "Slight or moderate thunderstorm": "qi-303-fill",
-    "Slight hail thunderstorm": "qi-304", "Heavy hail thunderstorm": "qi-304-fill"
+    'Clear sky': 'qi-100', 'Mainly clear': 'qi-102', 'Partly cloudy': 'qi-103', 'Overcast': 'qi-104', 'Fog': 'qi-501',
+    'Depositing Rime Fog': 'qi-2377', 'Light drizzle': 'qi-309', 'Moderate drizzle': 'qi-311', 'Dense drizzle': 'qi-312',
+    'Light freezing drizzle': 'qi-2214', 'Dense freezing drizzle': 'qi-2214',
+    'Slight rain': 'qi-305', 'Moderate rain': 'qi-306', 'Heavy rain': 'qi-307',
+    'Light freezing rain': 'qi-313', 'Heavy freezing rain': 'qi-313-fill',
+    'Slight snow fall': 'qi-400', 'Moderate snow fall': 'qi-401', 'Heavy snow fall': 'qi-402',
+    'Snow grains': 'qi-1040', 'Slight rain showers': 'qi-300', 'Moderate rain showers': 'qi-301', 'Violent rain showers': 'qi-301-fill',
+    'Slight snow showers': 'qi-406', 'Heavy snow showers': 'qi-406-fill', 'Slight or moderate thunderstorm': 'qi-303-fill',
+    'Slight hail thunderstorm': 'qi-304', 'Heavy hail thunderstorm': 'qi-304-fill'
   };
   let todayWIcon = icon[todayData.weathercode];
 
@@ -97,9 +69,9 @@ function WeatherData({ apiData }) {
                 <div className='row'>
                   <div className='col' >
                     <div className='card text-center'>
-                      <i className={todayWIcon} style={{ fontSize: "150px" }}></i>
+                      <i className={todayWIcon} style={{ fontSize: '150px' }}></i>
                       <div className='card-body text-center'>
-                        <div style={{ display: "inline-block", textAlign: "left" }}>
+                        <div style={{ display: 'inline-block', textAlign: 'left' }}>
                           <h5 className='mb-0'><b>Today</b></h5>
                           <p className="card-title mt-0"><small className='text-body-secondary'>{todayData.date}</small></p>
                           <li className='card-text'>Temperature: {todayData.temperature}°F</li>
@@ -131,9 +103,9 @@ function WeatherData({ apiData }) {
               return (
                 <div key={apiDate} className="carousel-item">
                   <div className={`card text-center ${markDay}`}>
-                    <i className={weatherIcon} style={{ fontSize: "150px" }}></i>
+                    <i className={weatherIcon} style={{ fontSize: '150px' }}></i>
                     <div className='card-body text-center'>
-                      <div style={{ display: "inline-block", textAlign: "left" }}>
+                      <div style={{ display: 'inline-block', textAlign: 'left' }}>
                         <h5 className='mb-0'><b>{day}</b></h5>
                         <p className='card-title mt-0'><small className='text-body-secondary'>{apiDate}</small></p>
                         <li className='card-text'>Temperature: {value.temperature}°F</li>

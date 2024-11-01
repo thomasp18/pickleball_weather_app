@@ -4,6 +4,11 @@
     "next/core-web-vitals"
   ],
   "rules": {
+    "@next/next/no-html-link-for-pages": 0,
+    "quotes": [
+      "error",
+      "single"
+    ],
     "semi": "error"
   },
   "overrides": [
