@@ -64,49 +64,19 @@ function WeatherData({ apiData }) {
             <button type="button" data-bs-target="#weatherCarousel" data-bs-slide-to="6" aria-label="wd7"></button>
           </div>
           <div className="carousel-inner">
-            <div className="carousel-item active">
-              <div className='container-fluid'>
-                <div className='row'>
-                  <div className='col' >
-                    <div className='card text-center'>
-                      <i className={todayWIcon} style={{ fontSize: '150px' }}></i>
-                      <div className='card-body text-center'>
-                        <div style={{ display: 'inline-block', textAlign: 'left' }}>
-                          <h5 className='mb-0'><b>Today</b></h5>
-                          <p className="card-title mt-0"><small className='text-body-secondary'>{todayData.date}</small></p>
-                          <li className='card-text'>Temperature: {todayData.temperature}°F</li>
-                          <li className='card-text'>Humidity: {todayData.humidity}%</li>
-                          <li className='card-text'>Wind: {todayData.wind} mph</li>
-                          <li className='card-text'>Rain Chance: {todayData.precipitation}%</li>
-                          <li className='card-text'>Weather Condition: {todayData.weathercode}</li>
-                        </div>
-                      </div>
-                      <div className='card-footer text-center'>
-                        <div className='row justify-content-end'>
-                          <p className='card-text'>Judgement: <b>{todayData.judgement}</b></p>
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {future.map((value) => {
+            {apiData.map((value, index) => {
               let apiDate = value.date;
               const d = new Date(apiDate);
               let day = weekday[d.getDay()];
               let weatherIcon = icon[value.weathercode];
 
               return (
-                <div key={apiDate} className="carousel-item">
+                <div key={apiDate} className={`carousel-item ${(index === 0) ? 'active' : ''}`}>
                   <div className={`card text-center ${markDay}`}>
                     <i className={weatherIcon} style={{ fontSize: '150px' }}></i>
                     <div className='card-body text-center'>
                       <div style={{ display: 'inline-block', textAlign: 'left' }}>
-                        <h5 className='mb-0'><b>{day}</b></h5>
+                        <h5 className='mb-0'><b>{(index === 0) ? 'Today' : day}</b></h5>
                         <p className='card-title mt-0'><small className='text-body-secondary'>{apiDate}</small></p>
                         <li className='card-text'>Temperature: {value.temperature}°F</li>
                         <li className='card-text'>Humidity: {value.humidity}%</li>
@@ -118,14 +88,11 @@ function WeatherData({ apiData }) {
                     <div className='card-footer text-center'>
                       <div className='row justify-content-center'>
                         <div className="col-sm">
-                          <p className='card-text'>Judgement: <b>{value.judgement}</b></p>
+                          <p className='card-text pb-5'>Judgement: <b>{value.judgement}</b></p>
                         </div>
                         {/* <div className='col-sm'>
                           <button className="btn btn-secondary" onClick={() => setMarked(!marked)}>mark</button>
                         </div> */}
-                        <br />
-                        <br />
-                        <br />
                       </div>
                     </div>
                   </div>
@@ -155,7 +122,7 @@ function WeatherData({ apiData }) {
 
             return (
               <button key={value.date} type="button" className="btn btn-secondary" data-bs-target="#weatherCarousel" data-bs-slide-to={index}>
-                <b>{day}</b>
+                <b>{(index === 0) ? 'Today' : day}</b>
                 <h1>{value.temperature}°F</h1>
               </button>
             );
