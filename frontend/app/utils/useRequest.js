@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 const useRequest = (method, url) => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setloading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
     axios.request({
@@ -20,16 +20,20 @@ const useRequest = (method, url) => {
         setError(err);
       })
       .finally(() => {
-        setloading(false);
+        setLoading(false);
       });
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [url]);
+
+  const refetch = () => {
+    fetchData();
+  };
 
   // custom hook returns value
-  return { response, error, loading };
+  return { response, error, loading, refetch };
 };
 
 export default useRequest;
