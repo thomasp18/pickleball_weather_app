@@ -33,8 +33,8 @@ function MatchData({ apiData }) {
                         <th>Date</th>
                         <th className='text-primary'>Team A</th>
                         <th className='text-primary'>Score</th>
-                        <th className='text-danger'>Team B</th>
                         <th className='text-danger'>Score</th>
+                        <th className='text-danger'>Team B</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,8 +46,8 @@ function MatchData({ apiData }) {
                                     <td>{value.mdate.toDateString()}</td>
                                     <td>{value.teamA.join(', ')}</td>
                                     <td>{value.ascore}</td>
-                                    <td>{value.teamB.join(', ')}</td>
                                     <td>{value.bscore}</td>
+                                    <td>{value.teamB.join(', ')}</td>
                                 </tr>
                             );
                         }
