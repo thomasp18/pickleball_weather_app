@@ -29,12 +29,12 @@ function MatchData({ apiData }) {
             <table className='table text-center'>
                 <thead>
                     <tr>
-                        <td>Match</td>
-                        <td>Date</td>
-                        <td className='text-primary'>Team A</td>
-                        <td className='text-primary'>Score</td>
-                        <td className='text-danger'>Team B</td>
-                        <td className='text-danger'>Score</td>
+                        <th>Match</th>
+                        <th>Date</th>
+                        <th className='text-primary'>Team A</th>
+                        <th className='text-primary'>Score</th>
+                        <th className='text-danger'>Team B</th>
+                        <th className='text-danger'>Score</th>
                     </tr>
                 </thead>
                 <tbody>
