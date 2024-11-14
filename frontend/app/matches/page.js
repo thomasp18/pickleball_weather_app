@@ -8,12 +8,11 @@ export default function Main() {
 
     // Once there're no errors and is done loading, render the match data
     if (!error && !loading) {
-        const players = getPlayers(response);
         return (
             <div>
                 <h1 className='display-1 text-center p-auto m-auto pt-2'>Match History</h1>
                 <br />
-                <MatchData apiData={response} players={players} />
+                <MatchData apiData={response} />
             </div>
         );
     } else {
@@ -22,77 +21,62 @@ export default function Main() {
 }
 
 // Displays the match history in a table
-function MatchData({ apiData, players }) {
-    let newArr = condenseData(apiData);
-
+function MatchData({ apiData }) {
+    const newArr = formattedData(apiData);
     // Match history table
     return (
-        <>
-            <div className='container-lg'>
-                <table className='table text-center'>
-                    <thead>
-                        <tr>
-                            <td>Match</td>
-                            <td>Date</td>
-                            <td className='text-primary'>Team A</td>
-                            <td className='text-primary'>Score</td>
-                            <td className='text-danger'>Team B</td>
-                            <td className='text-danger'>Score</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {newArr.map((value, index) => {
-                            let apiDate = new Date(value.mdate);
-                            if (value.match_id) {
-                                return (
-                                    <tr key={value.match_id}>
-                                        <td>Game {value.match_id}</td>
-                                        <td>{apiDate.toDateString()}</td>
-                                        <td>{players[index].teamA.join(', ')}</td>
-                                        <td>{value.ascore}</td>
-                                        <td>{players[index].teamB.join(', ')}</td>
-                                        <td>{value.bscore}</td>
-                                    </tr>
-                                );
-                            }
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        </>
+        <div className='container' id='MatchTable'>
+            <table className='table text-center'>
+                <thead>
+                    <tr>
+                        <td>Match</td>
+                        <td>Date</td>
+                        <td className='text-primary'>Team A</td>
+                        <td className='text-primary'>Score</td>
+                        <td className='text-danger'>Team B</td>
+                        <td className='text-danger'>Score</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {newArr.map((value) => {
+                        if (value.match_id) {
+                            return (
+                                <tr key={value.match_id}>
+                                    <td>Game {value.match_id}</td>
+                                    <td>{value.mdate.toDateString()}</td>
+                                    <td>{value.teamA.join(', ')}</td>
+                                    <td>{value.ascore}</td>
+                                    <td>{value.teamB.join(', ')}</td>
+                                    <td>{value.bscore}</td>
+                                </tr>
+                            );
+                        }
+                    })}
+                </tbody>
+            </table>
+        </div>
     );
 }
 
-// Condenses the API data by match ID to avoid duplicate rows
-function condenseData(data) {
-    let condensed = [];
+// Formats the data by condensing each match to 1 line, adding the players and their respective teams, and removing unnecessary information (pname and team).
+function formattedData(data) {
+    let formatted = [];
+    let players = { teamA: [], teamB: [] };
     for (let i = 0; i < data.length; i++) {
-        if (data[i - 1] === undefined) {
-            condensed.push(data[i]);
+        const { pname, team, ...rest } = data[i];
+        if (team === 'a') {
+            players.teamA.push(pname);
         } else {
-            if (data[i].match_id !== data[i - 1].match_id) {
-                condensed.push(data[i]);
-            }
+            players.teamB.push(pname);
         }
-    };
-    return condensed;
-}
 
-// Gets the players on either team per match
-function getPlayers(apiData) {
-    let newArr = condenseData(apiData);
-    let players = {};
-    for (let i = 0; i < newArr.length; i++) {
-        players[i] = { teamA: [], teamB: [] };
-        for (let j = 0; j < apiData.length; j++) {
-            if (apiData[j].match_id === (i + 1)) {
-                if (apiData[j].team === 'a') {
-                    players[i].teamA.push(apiData[j].pname);
-                } else if (apiData[j].team === 'b') {
-                    players[i].teamB.push(apiData[j].pname);
-                }
-            }
+        // run this right before match cutover (on the last item in data for a match)
+        if (i === data.length - 1 || data[i].match_id !== data[i + 1].match_id) {
+            Object.assign(rest, players);
+            rest.mdate = new Date(rest.mdate);
+            formatted.push(rest);
+            players = { teamA: [], teamB: [] };
         }
     }
-    return players;
+    return formatted;
 }

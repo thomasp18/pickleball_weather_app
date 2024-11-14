@@ -21,3 +21,7 @@ div.scrollmenu a:hover {
 .marked {
   background-color: green;
 }
+
+#MatchTable {
+  overflow: auto;
+}
