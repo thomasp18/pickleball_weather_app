@@ -170,7 +170,7 @@ function PlayerData({ players, playerStats }) {
       <tr key={id}>
         <td>
           {pname}
-          {playerStats[id]?.titles.map((title, index) => (
+          {playerStats[id].titles.map((title, index) => (
             <OverlayTrigger
               key={index}
               overlay={<Tooltip id={`tooltip-${title}`} style={{ fontSize: '12px' }}>{titleTooltips[title]}</Tooltip>}
