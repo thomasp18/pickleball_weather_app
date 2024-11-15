@@ -4,7 +4,7 @@ import useRequest from '@/utils/useRequest';
 
 // Main component
 export default function Main() {
-    const { response, error, loading } = useRequest('GET', '/api/matches');
+    const { response: matchesDB, error, loading } = useRequest('GET', '/api/matches');
 
     // Once there're no errors and is done loading, render the match data
     if (!error && !loading) {
@@ -12,7 +12,7 @@ export default function Main() {
             <div>
                 <h1 className='display-1 text-center p-auto m-auto pt-2'>Match History</h1>
                 <br />
-                <MatchData matches={response} />
+                <MatchData matches={matchesDB} />
             </div>
         );
     } else {
