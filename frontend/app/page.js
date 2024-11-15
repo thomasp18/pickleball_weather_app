@@ -1,27 +1,33 @@
 'use client';
 import { useState } from 'react';
+import Error from './components/loading-and-error/error';
+import Loading from './components/loading-and-error/loading';
 import useRequest from './utils/useRequest';
 
 // Main component
 export default function Home() {
   const { response, error, loading } = useRequest('GET', '/api/weather');
 
-  if (!error && !loading) {
-    return (
-      <div>
-        <h1 className='display-1 text-center p-auto m-auto pt-2'>PikoWeatherer</h1>
-        <br />
-        <div className='text-center'>
-          <WeatherData apiData={response} />
-        </div>
-        <br />
-        <div className='text-center mt-2 mb-4'>
-          <a className="btn btn-primary" href="/score">Play Now!</a>
-        </div>
-      </div>);
-  } else {
-    console.log(error);
+  if (loading) {
+    return <Loading />;
   }
+
+  if (error) {
+    return <Error />;
+  }
+
+  return (
+    <div>
+      <h1 className='display-1 text-center p-auto m-auto pt-2'>PikoWeatherer</h1>
+      <br />
+      <div className='text-center'>
+        <WeatherData apiData={response} />
+      </div>
+      <br />
+      <div className='text-center mt-2 mb-4'>
+        <a className="btn btn-primary" href="/score">Play Now!</a>
+      </div>
+    </div>);
 }
 
 // Displays the weather data in a more readable state
