@@ -1,7 +1,7 @@
 'use client';
 
 import Error from '@/components/loading-and-error/error';
-import Loading from '@/components/loading-and-error/template';
+import Loading from '@/components/loading-and-error/loading';
 import useRequest from '@/utils/useRequest';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
