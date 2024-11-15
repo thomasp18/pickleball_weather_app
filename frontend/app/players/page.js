@@ -54,6 +54,27 @@ export default function Players() {
     };
   }
 
+  if (playersLoading || matchesLoading) {
+    return (
+      <div className='container-sm d-flex flex-column'>
+        <h1 className='display-3'>Loading</h1>
+        <p>Retrieving data...</p>
+      </div>
+    );
+  }
+
+  if (playersError || matchesError) {
+    console.log(playersError, matchesError);
+    return (
+      <div className='container-sm d-flex flex-column'>
+        <h1 className='display-3'>Error</h1>
+        <p>There was an error retrieving our data... 🙉</p>
+        <p>ERROR: {playersError}</p>
+        <p>ERROR: {matchesError}</p>
+      </div>
+    );
+  }
+
   if (!playersError && !playersLoading && !matchesError && !matchesLoading) {
     return (
       <div className='container-sm d-flex flex-column'>
