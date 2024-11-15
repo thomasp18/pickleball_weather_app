@@ -101,14 +101,14 @@ export default function Players() {
 function calculatePlayerStats(players, matches) {
   const playerStats = {};
 
-  players.forEach(({ pname }) => {
-    if (!playerStats[pname]) {
-      playerStats[pname] = { wins: 0, matches: 0, winrate: 0, titles: [] };
+  players.forEach(({ id }) => {
+    if (!playerStats[id]) {
+      playerStats[id] = { wins: 0, matches: 0, winrate: 0, titles: [] };
     }
   });
 
-  matches.forEach(({ pname, team, ascore, bscore }) => {
-    const player = playerStats[pname];
+  matches.forEach(({ id, team, ascore, bscore }) => {
+    const player = playerStats[id];
     player.matches += 1;
     if ((team === 'a' && ascore > bscore) || (team === 'b' && bscore > ascore)) {
       player.wins += 1;
@@ -149,7 +149,7 @@ function PlayerData({ players, playerStats }) {
       <tr key={id}>
         <td>
           {pname}
-          {playerStats[pname]?.titles.map((title, index) => (
+          {playerStats[id]?.titles.map((title, index) => (
             <OverlayTrigger
               key={index}
               overlay={<Tooltip id={`tooltip-${title}`} style={{ fontSize: '12px' }}>{titleTooltips[title]}</Tooltip>}
@@ -159,8 +159,8 @@ function PlayerData({ players, playerStats }) {
           ))}
         </td>
         <td>
-          {playerStats[pname].winrate.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })}
-          <span style={{ fontSize: '12px' }}> {'('}{playerStats[pname]?.matches || 0}{')'}
+          {playerStats[id].winrate.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })}
+          <span style={{ fontSize: '12px' }}> {'('}{playerStats[id]?.matches || 0}{')'}
           </span>
         </td>
       </tr>
