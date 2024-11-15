@@ -8,14 +8,10 @@ const sql = postgres('postgresql://piko:pikopw@localhost:5432/piko-db?ssl=false'
 
 export async function GET() {
   return NextResponse.json(await sql`
-    SELECT * FROM players;
-  `);
-}
-
-export async function POST(request) {
-  const { pname } = await request.json();
-  return NextResponse.json(await sql`
-    INSERT INTO players (pname)
-    VALUES (${pname});
+    SELECT * FROM players
+    JOIN matches_players_rel
+    ON players.id = matches_players_rel.player_id
+    JOIN matches
+    ON matches_players_rel.match_id = matches.id;
   `);
 }
