@@ -25,7 +25,7 @@ function MatchData({ apiData }) {
     const newArr = formattedData(apiData);
     // Match history table
     return (
-        <div className='container' id='MatchTable'>
+        <div className='container' style={{ overflow: 'auto' }}>
             <table className='table text-center'>
                 <thead>
                     <tr>
