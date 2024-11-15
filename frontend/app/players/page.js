@@ -122,14 +122,14 @@ export default function Players() {
 function calculatePlayerStats(players, matches) {
   const playerStats = {};
 
-  players.forEach(({ id }) => {
+  players.forEach(({ id, pname }) => {
     if (!playerStats[id]) {
-      playerStats[id] = { wins: 0, matches: 0, winrate: 0, titles: [] };
+      playerStats[id] = { name: pname, wins: 0, matches: 0, winrate: 0, titles: [] };
     }
   });
 
-  matches.forEach(({ id, team, ascore, bscore }) => {
-    const player = playerStats[id];
+  matches.forEach(({ player_id, team, ascore, bscore }) => {
+    const player = playerStats[player_id];
     player.matches += 1;
     if ((team === 'a' && ascore > bscore) || (team === 'b' && bscore > ascore)) {
       player.wins += 1;
