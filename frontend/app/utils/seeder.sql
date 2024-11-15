@@ -73,3 +73,7 @@ VALUES
 ('2024-11-02'),
 ('2024-11-05'),
 ('2024-11-06');
+
+-- fix increment sequence
+SELECT setval(pg_get_serial_sequence('players', 'id'), coalesce(max(id)+1, 1), false) FROM players;
+SELECT setval(pg_get_serial_sequence('matches', 'id'), coalesce(max(id)+1, 1), false) FROM matches;
