@@ -1,23 +1,29 @@
 // Import statements
 'use client';
+import Error from '@/components/loading-and-error/error';
+import Loading from '@/components/loading-and-error/loading';
 import useRequest from '@/utils/useRequest';
 
 // Main component
 export default function Main() {
-    const { response: matchesDB, error, loading } = useRequest('GET', '/api/matches');
+    const { response: matchesDB, error: matchesError, loading: matchesLoading } = useRequest('GET', '/api/matches');
+
+    if (matchesLoading) {
+        return <Loading />;
+    }
+
+    if (matchesError) {
+        return <Error />;
+    }
 
     // Once there're no errors and is done loading, render the match data
-    if (!error && !loading) {
-        return (
-            <div>
-                <h1 className='display-1 text-center p-auto m-auto pt-2'>Match History</h1>
-                <br />
-                <MatchData matches={matchesDB} />
-            </div>
-        );
-    } else {
-        console.log(error);
-    }
+    return (
+        <div>
+            <h1 className='display-1 text-center p-auto m-auto pt-2'>Match History</h1>
+            <br />
+            <MatchData matches={matchesDB} />
+        </div>
+    );
 }
 
 // Displays the match history in a table

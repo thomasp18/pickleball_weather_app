@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import Error from '@/components/loading-and-error/error';
+import Loading from '@/components/loading-and-error/loading';
 import useRequest from '@/utils/useRequest';
-import Modal from 'react-bootstrap/Modal';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
@@ -55,68 +57,49 @@ export default function Players() {
   }
 
   if (playersLoading || matchesLoading) {
-    return (
-      <div className='container-sm d-flex flex-column'>
-        <h1 className='display-3'>Loading</h1>
-        <p>Retrieving data...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (playersError || matchesError) {
-    console.log(playersError, matchesError);
-    return (
-      <div className='container-sm d-flex flex-column'>
-        <h1 className='display-3'>Error</h1>
-        <p>There was an error retrieving our data... 🙉</p>
-        <p>ERROR: {playersError}</p>
-        <p>ERROR: {matchesError}</p>
-      </div>
-    );
+    return <Error />;
   }
 
-  if (!playersError && !playersLoading && !matchesError && !matchesLoading) {
-    return (
-      <div className='container-sm d-flex flex-column'>
-        <h1 className='display-3'>Players</h1>
+  return <div className='container-sm d-flex flex-column'>
+    <h1 className='display-3'>Players</h1>
 
-        {/* Settings */}
-        <div>
-          <label htmlFor='playerName' className='form-label'>Settings</label>
-          <div className='input-group'>
-            <input onChange={(event) => {
-              let value = event.target.value;
-              value = value.replace(/[^A-Za-z]/ig, '');
-              setPlayerName(value);
-            }} type='text' className='form-control' placeholder='Name' id='playerName' value={playerName} />
-            <button className='btn btn-outline-secondary' type='button' onClick={() => AddPlayer(playerName)}>Add player</button>
-          </div>
-          <div className='form-text mb-2'>Add a new player?</div>
-        </div>
-
-        {/* Table */}
-        <div>
-          <table className='table'>
-            <thead>
-              <tr>
-                <th scope='col'>Name</th>
-                <th scope='col'>Win Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <PlayerData players={players} playerStats={playerStats} />
-            </tbody>
-          </table>
-        </div>
-
-        {/* Modal */}
-        <PlayerModal playerName={playerName} setPlayerName={setPlayerName} playerRequested={playerRequested} setPlayerRequested={setPlayerRequested} />
-
+    {/* Settings */}
+    <div>
+      <label htmlFor='playerName' className='form-label'>Settings</label>
+      <div className='input-group'>
+        <input onChange={(event) => {
+          let value = event.target.value;
+          value = value.replace(/[^A-Za-z]/ig, '');
+          setPlayerName(value);
+        }} type='text' className='form-control' placeholder='Name' id='playerName' value={playerName} />
+        <button className='btn btn-outline-secondary' type='button' onClick={() => AddPlayer(playerName)}>Add player</button>
       </div>
-    );
-  } else {
-    console.log(playersError, matchesError);
-  }
+      <div className='form-text mb-2'>Add a new player?</div>
+    </div>
+
+    {/* Table */}
+    <div>
+      <table className='table'>
+        <thead>
+          <tr>
+            <th scope='col'>Name</th>
+            <th scope='col'>Win Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <PlayerData players={players} playerStats={playerStats} />
+        </tbody>
+      </table>
+    </div>
+
+    {/* Modal */}
+    <PlayerModal playerName={playerName} setPlayerName={setPlayerName} playerRequested={playerRequested} setPlayerRequested={setPlayerRequested} />
+
+  </div>;
 }
 
 function calculatePlayerStats(players, matches) {
