@@ -181,7 +181,7 @@ function PlayerData({ players, playerStats }) {
         </td>
         <td>
           {playerStats[id].winrate.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })}
-          <span style={{ fontSize: '12px' }}> {'('}{playerStats[id]?.matches || 0}{')'}
+          <span style={{ fontSize: '12px' }}> ({playerStats[id].wins}/{playerStats[id].matches})
           </span>
         </td>
       </tr>
