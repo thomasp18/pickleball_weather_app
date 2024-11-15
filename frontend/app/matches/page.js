@@ -12,7 +12,7 @@ export default function Main() {
             <div>
                 <h1 className='display-1 text-center p-auto m-auto pt-2'>Match History</h1>
                 <br />
-                <MatchData apiData={response} />
+                <MatchData matches={response} />
             </div>
         );
     } else {
@@ -21,8 +21,8 @@ export default function Main() {
 }
 
 // Displays the match history in a table
-function MatchData({ apiData }) {
-    const newArr = formattedData(apiData);
+function MatchData({ matches }) {
+    const formattedMatches = formatData(matches);
     // Match history table
     return (
         <div className='container' style={{ overflow: 'auto' }}>
@@ -38,7 +38,7 @@ function MatchData({ apiData }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {newArr.map((value) => {
+                    {formattedMatches.map((value) => {
                         if (value.match_id) {
                             return (
                                 <tr key={value.match_id}>
@@ -59,7 +59,7 @@ function MatchData({ apiData }) {
 }
 
 // Formats the data by condensing each match to 1 line, adding the players and their respective teams, and removing unnecessary information (pname and team).
-function formattedData(data) {
+function formatData(data) {
     let formatted = [];
     let players = { teamA: [], teamB: [] };
     for (let i = 0; i < data.length; i++) {
