@@ -1,5 +1,6 @@
 import BootstrapClient from './components/BootstrapClient.js';
 import Footer from './components/footer/footer.js';
+import Navibar from './components/navbar/navbar.js';
 import './globals.css';
 
 export const metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
         <title>Pickleball Weather App</title>
       </head>
       <body>
+        <Navibar />
         <BootstrapClient />
         {children}
         <Footer />
