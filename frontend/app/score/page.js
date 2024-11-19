@@ -39,6 +39,12 @@ export default function Score() {
           <input onChange={() => setGameType('Doubles')} type='radio' className='btn-check' id='doubles' autoComplete='off' name='gameType' defaultChecked={gameType} />
           <label className={`btn btn-outline-primary ${disabled && 'disabled'}`} htmlFor='doubles'>Play Doubles</label>
         </div>
+        <select className='form-select' multiple defaultValue={['default']}>
+          <option value='default' disabled>Open this select menu</option>
+          <option value='1'>One</option>
+          <option value='2'>Two</option>
+          <option value='3'>Three</option>
+        </select>
       </div>
 
       {/* Game info */}
