@@ -3,6 +3,9 @@ import { useState } from 'react';
 import Error from './components/loading-and-error/error';
 import Loading from './components/loading-and-error/loading';
 import useRequest from './utils/useRequest';
+import Button from 'react-bootstrap/Button';
+import Tooltip from 'react-bootstrap/Tooltip';
+import { OverlayTrigger } from 'react-bootstrap';
 
 // Main component
 export default function Home() {
@@ -158,12 +161,27 @@ function WeatherData({ apiData }) {
           {apiData.map((value, index) => {
             const d = new Date(value.date);
             let day = weekday[d.getDay()];
+            const judge = {
+              'kms': 'this is not peak',
+              'this is peak piko weather': 'this is peak'
+            };
 
             return (
-              <button key={value.date} type="button" className="btn btn-secondary" data-bs-target="#weatherCarousel" data-bs-slide-to={index}>
-                <b>{day}</b>
-                <h1>{value.temperature}°F</h1>
-              </button>
+              <OverlayTrigger
+                key={value.date}
+                overlay={<Tooltip>{judge[value.judgement]}</Tooltip>}
+              >
+                <Button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-target="#weatherCarousel"
+                  data-bs-slide-to={index}
+                  variant={`${value.judgement === 'kms' ? '' : 'success'}`}
+                >
+                  <b>{day}</b>
+                  <h1>{value.temperature}°F</h1>
+                </Button>
+              </OverlayTrigger>
             );
           })}
         </div>
