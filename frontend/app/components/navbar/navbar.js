@@ -2,7 +2,6 @@
 import { Image, Nav, NavbarToggle } from 'react-bootstrap';
 import { Navbar } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-import { NavDropdown } from 'react-bootstrap';
 
 function Navibar() {
     let currentPage = window.location.pathname;
