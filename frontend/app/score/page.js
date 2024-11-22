@@ -29,7 +29,6 @@ export default function Score() {
       <div className='d-flex flex-column page justify-content-evenly align-items-center'>
 
         {/* Game info */}
-
         <div>
           <h3>Playing {gameType} to {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points</h3>
           <p className='text-center fst-italic'><b className={possession === 'A' ? 'text-primary' : 'text-danger'}>Team {possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> is on serve <b>{serveCounter}</b></>}</p>
