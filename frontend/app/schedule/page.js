@@ -29,13 +29,38 @@ function ScheduleData({ schedule, matches }) {
     return (
         <div className='container'>
             <Accordion >
-                {schedule.map((value) => {
-                    let scheddate = new Date(value.sdate);
+                {schedule.map((sval) => {
+                    let scheddate = new Date(sval.sdate).toDateString();
                     return (
-                        <Accordion.Item key={value.id} eventKey={value.id - 1}>
-                            <Accordion.Header>{scheddate.toDateString()}</Accordion.Header>
+                        <Accordion.Item key={sval.id} eventKey={sval.id - 1}>
+                            <Accordion.Header>{scheddate}</Accordion.Header>
                             <Accordion.Body>
-                                {/* TODO */}
+                                <table className='table text-center'>
+                                    <thead>
+                                        <tr>
+                                            <th>Match</th>
+                                            <th className='text-primary'>Team A</th>
+                                            <th className='text-primary'>Score</th>
+                                            <th className='text-danger'>Score</th>
+                                            <th className='text-danger'>Team B</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {matches.map((mval) => {
+                                            if (mval.mdate === scheddate) {
+                                                return (
+                                                    <tr key={mval.match_id}>
+                                                        <td>Game {mval.match_id}</td>
+                                                        <td>{mval.teamA.join(', ')}</td>
+                                                        <td>{mval.ascore}</td>
+                                                        <td>{mval.bscore}</td>
+                                                        <td>{mval.teamB.join(', ')}</td>
+                                                    </tr>
+                                                );
+                                            }
+                                        })}
+                                    </tbody>
+                                </table>
                             </Accordion.Body>
                         </Accordion.Item>
                     );
