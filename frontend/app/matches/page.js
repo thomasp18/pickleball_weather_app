@@ -28,7 +28,6 @@ export default function Main() {
 
 // Displays the match history in a table
 function MatchData({ matches }) {
-    const formattedMatches = formatData(matches);
     // Match history table
     return (
         <div className='container' style={{ overflow: 'auto' }}>
@@ -44,12 +43,12 @@ function MatchData({ matches }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {formattedMatches.map((value) => {
+                    {matches.map((value) => {
                         if (value.match_id) {
                             return (
                                 <tr key={value.match_id}>
                                     <td>Game {value.match_id}</td>
-                                    <td>{value.mdate.toDateString()}</td>
+                                    <td>{value.mdate}</td>
                                     <td>{value.teamA.join(', ')}</td>
                                     <td>{value.ascore}</td>
                                     <td>{value.bscore}</td>
@@ -62,27 +61,4 @@ function MatchData({ matches }) {
             </table>
         </div>
     );
-}
-
-// Formats the data by condensing each match to 1 line, adding the players and their respective teams, and removing unnecessary information (pname and team).
-function formatData(data) {
-    let formatted = [];
-    let players = { teamA: [], teamB: [] };
-    for (let i = 0; i < data.length; i++) {
-        const { pname, team, ...rest } = data[i];
-        if (team === 'a') {
-            players.teamA.push(pname);
-        } else {
-            players.teamB.push(pname);
-        }
-
-        // run this right before match cutover (on the last item in data for a match)
-        if (i === data.length - 1 || data[i].match_id !== data[i + 1].match_id) {
-            Object.assign(rest, players);
-            rest.mdate = new Date(rest.mdate);
-            formatted.push(rest);
-            players = { teamA: [], teamB: [] };
-        }
-    }
-    return formatted;
 }
