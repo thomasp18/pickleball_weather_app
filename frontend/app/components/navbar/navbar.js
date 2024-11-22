@@ -14,6 +14,7 @@ function Navibar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto" variant='underline' activeKey={window.location.pathname}>
                         <Nav.Link href="/">Home</Nav.Link>
+                        <Nav.Link href='/schedule'>Schedule</Nav.Link>
                         <Nav.Link href='/score' eventKey="/score">Scorekeeper</Nav.Link>
                         <Nav.Link href='/matches' eventKey="/matches">Matches</Nav.Link>
                         <Nav.Link href='/players' eventKey="/players">Players</Nav.Link>
