@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import './page.css';
 
 export default function Score() {
   const [gameType, setGameType] = useState('Doubles');
@@ -11,6 +12,7 @@ export default function Score() {
   const [serveCounter, setServeCounter] = useState(2);
   const [aScore, setAScore] = useState(0);
   const [bScore, setBScore] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
   const winner = determineWinner(aScore, bScore, playToScore);
   const disabled = winner ? true : false;
 
@@ -24,76 +26,71 @@ export default function Score() {
   return (
     <div className='container-sm d-flex flex-column'>
       <h1 className='display-3'>Scorekeeper</h1>
+      <div className='d-flex flex-column page justify-content-evenly align-items-center'>
+
+        {/* Game info */}
+
+        <div>
+          <h3>Playing {gameType} to {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points</h3>
+          <p className='text-center fst-italic'><b className={possession === 'A' ? 'text-primary' : 'text-danger'}>Team {possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> is on serve <b>{serveCounter}</b></>}</p>
+        </div>
+
+        {/* Winner card */}
+        {winner ? <div className='card w-75'>
+          <div className='card-header'>
+            Winner
+          </div>
+          <div className='card-body d-flex flex-column align-items-center'>
+            <p className='card-text'>Team <b>{winner}</b> won! {randomEmoji()}</p>
+            <button className='btn btn-danger btn-sm' onClick={() => {
+              resetGame();
+            }}>Reset game</button>
+          </div>
+        </div> : <div style={{ minHeight: '145px' }}></div>}
+
+        {/* Score + buttons */}
+        <div className='d-flex flex-row'>
+          <div>
+            <p className='display-3 text-center'>{aScore}</p>
+            <ScoreButton
+              team={'A'}
+              inPossession={possession === 'A'}
+              setPossession={setPossession}
+              serveCounter={serveCounter}
+              setServeCounter={setServeCounter}
+              gameType={gameType}
+              score={aScore}
+              setScore={setAScore}
+              disabled={disabled}
+            />
+          </div>
+          <div>
+            <p className='display-3 text-center'>{bScore}</p>
+            <ScoreButton
+              team={'B'}
+              inPossession={possession === 'B'}
+              setPossession={setPossession}
+              serveCounter={serveCounter}
+              setServeCounter={setServeCounter}
+              gameType={gameType}
+              score={bScore}
+              setScore={setBScore}
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
+      </div>
 
       {/* Settings */}
-      <div className='mb-5'>
-        <label htmlFor='playToScore' className='form-label'>Settings</label>
-        <div className='input-group'>
-          <input onChange={(event) => setPlayToScore(event.target.value)} type='number' className='form-control' id='playToScore' placeholder='11' disabled={disabled && true} />
-          <span className='input-group-text'>points</span>
-        </div>
-        <div className='form-text mb-2' id='basic-addon4'>How many points would you like to play to?</div>
-        <div className='btn-group btn-group-sm' role='group'>
-          <input onChange={() => setGameType('Singles')} type='radio' className='btn-check' id='singles' autoComplete='off' name='gameType' />
-          <label className={`btn btn-outline-primary ${disabled && 'disabled'}`} htmlFor='singles'>Play Singles</label>
-          <input onChange={() => setGameType('Doubles')} type='radio' className='btn-check' id='doubles' autoComplete='off' name='gameType' defaultChecked={gameType} />
-          <label className={`btn btn-outline-primary ${disabled && 'disabled'}`} htmlFor='doubles'>Play Doubles</label>
-        </div>
-        <select className='form-select' multiple defaultValue={['default']}>
-          <option value='default' disabled>Open this select menu</option>
-          <option value='1'>One</option>
-          <option value='2'>Two</option>
-          <option value='3'>Three</option>
-        </select>
+      <div style={{ position: 'absolute', bottom: '70px', right: '20px' }}>
+        <button type='button' className='btn btn-secondary' onClick={() => setShowSettings(true)}>Settings</button>
       </div>
 
-      {/* Game info */}
-      <div className='d-flex flex-column align-items-center'>
-        <h3>Playing {gameType} to {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points</h3>
-        <div style={{ minHeight: 150, textAlign: 'center' }}>
-          <p style={{ textAlign: 'center', fontStyle: 'italic' }}><b className={possession === 'A' ? 'text-primary' : 'text-danger'}>Team {possession}</b> is in posesssion of the ball{gameType === 'Doubles' && <> and <br /> is on serve <b>{serveCounter}</b></>}</p>
-          {winner && <p>Team <b>{winner}</b> won! {randomEmoji()}</p>}
-          {winner && <button className='btn btn-danger' onClick={() => {
-            resetGame();
-          }}>Reset game</button>}
-        </div>
-      </div>
 
-      {/* Score + buttons */}
-      <div className='d-flex flex-row justify-content-evenly'>
-        <div>
-          <p style={{ textAlign: 'center' }} className='display-3'>{aScore}</p>
-          <ScoreButton
-            team={'A'}
-            inPossession={possession === 'A'}
-            setPossession={setPossession}
-            serveCounter={serveCounter}
-            setServeCounter={setServeCounter}
-            gameType={gameType}
-            score={aScore}
-            setScore={setAScore}
-            disabled={disabled}
-          />
-        </div>
-        <div>
-          <p style={{ textAlign: 'center' }} className='display-3'>{bScore}</p>
-          <ScoreButton
-            team={'B'}
-            inPossession={possession === 'B'}
-            setPossession={setPossession}
-            serveCounter={serveCounter}
-            setServeCounter={setServeCounter}
-            gameType={gameType}
-            score={bScore}
-            setScore={setBScore}
-            disabled={disabled}
-          />
-        </div>
-      </div>
-
-      {/* Modal */}
+      {/* Modals */}
+      <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} setPlayToScore={setPlayToScore} disabled={disabled} setGameType={setGameType} gameType={gameType} />
       <WinnerModal winner={winner} resetGame={resetGame} />
-
     </div>
   );
 }
@@ -101,7 +98,7 @@ export default function Score() {
 function ScoreButton({ team, inPossession, setPossession, serveCounter, setServeCounter, gameType, score, setScore, disabled }) {
   return (
     <>
-      <button className={`btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`} onClick={() => {
+      <button className={`mx-2 btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`} onClick={() => {
         if (inPossession) {
           setScore(score + 1);
         } else if (gameType === 'Doubles') {
@@ -115,6 +112,54 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
           setPossession(team);
         }
       }}>Team {team} score</button>
+    </>
+  );
+}
+
+function PlayerSelect({ team, disabled }) {
+  return (
+    <div className='input-group mb-2'>
+      <label className='input-group-text'>Team {team}</label>
+      <select className='form-select form-select-sm' multiple disabled={disabled}>
+        <option value='1'>One</option>
+        <option value='2'>Two</option>
+        <option value='3'>Three</option>
+      </select>
+    </div>
+  );
+}
+
+function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled, setGameType, gameType }) {
+  return (
+    <>
+      <Modal
+        show={showSettings}
+        onHide={() => setShowSettings(false)}
+        centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Settings</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <label class='form-label'>Game Rules</label>
+            <div className='input-group mb-2'>
+              <input onChange={(event) => setPlayToScore(event.target.value)} type='number' className='form-control' placeholder='11' disabled={disabled && true} />
+              <span className='input-group-text'>points</span>
+            </div>
+            <div className='btn-group btn-group-sm mb-2'>
+              <input onChange={() => setGameType('Singles')} type='radio' className='btn-check' id='singles' autoComplete='off' name='gameType' />
+              <label className={`btn btn-outline-primary ${disabled && 'disabled'}`} htmlFor='singles'>Play Singles</label>
+              <input onChange={() => setGameType('Doubles')} type='radio' className='btn-check' id='doubles' autoComplete='off' name='gameType' defaultChecked={gameType} />
+              <label className={`btn btn-outline-primary ${disabled && 'disabled'}`} htmlFor='doubles'>Play Doubles</label>
+            </div>
+            <div>
+              <label class='form-label'>Players</label>
+              <PlayerSelect team={'A'} disabled={disabled} />
+              <PlayerSelect team={'B'} disabled={disabled} />
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
