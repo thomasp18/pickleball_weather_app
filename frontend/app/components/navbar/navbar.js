@@ -1,6 +1,6 @@
 'use client';
-import { Image, Nav, NavbarToggle } from 'react-bootstrap';
-import { Navbar } from 'react-bootstrap';
+import { usePathname } from 'next/navigation';
+import { Image, Nav, Navbar, NavbarToggle } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
 function Navibar() {
@@ -12,7 +12,7 @@ function Navibar() {
                 </Navbar.Brand>
                 <NavbarToggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto" variant='underline' activeKey={window.location.pathname}>
+                    <Nav className="me-auto" variant='underline' activeKey={usePathname()}>
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href='/schedule'>Schedule</Nav.Link>
                         <Nav.Link href='/score' eventKey="/score">Scorekeeper</Nav.Link>
