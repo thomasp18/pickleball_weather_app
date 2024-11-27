@@ -1,8 +1,11 @@
 'use client';
 
+import Error from '@/components/loading-and-error/error';
+import Loading from '@/components/loading-and-error/loading';
+import useRequest from '@/utils/useRequest';
 import { useEffect, useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import './page.css';
 
 export default function Score() {
@@ -13,6 +16,7 @@ export default function Score() {
   const [aScore, setAScore] = useState(0);
   const [bScore, setBScore] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const { response: players, error: playersError, loading: playersLoading } = useRequest('GET', '/api/players');
   const winner = determineWinner(aScore, bScore, playToScore);
   const disabled = winner ? true : false;
 
@@ -21,6 +25,14 @@ export default function Score() {
     setBScore(0);
     setPossession('A');
     setServeCounter(2);
+  }
+
+  if (playersLoading) {
+    return <Loading />;
+  }
+
+  if (playersError) {
+    return <Error />;
   }
 
   return (
@@ -88,7 +100,7 @@ export default function Score() {
 
 
       {/* Modals */}
-      <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} setPlayToScore={setPlayToScore} disabled={disabled} setGameType={setGameType} gameType={gameType} />
+      <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} setPlayToScore={setPlayToScore} disabled={disabled} setGameType={setGameType} gameType={gameType} players={players} />
       <WinnerModal winner={winner} resetGame={resetGame} />
     </div>
   );
@@ -115,20 +127,43 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
   );
 }
 
-function PlayerSelect({ team, disabled }) {
+function PlayerSelect({ disabled, players }) {
+  const [aPlayers, setAPlayers] = useState([]);
+  const [bPlayers, setBPlayers] = useState([]);
+  const availableAPlayers = players.filter(p => !bPlayers.includes(p.pname));
+  const availableBPlayers = players.filter(p => !aPlayers.includes(p.pname));
+
   return (
-    <div className='input-group mb-2'>
-      <label className='input-group-text'>Team {team}</label>
-      <select className='form-select form-select-sm' multiple disabled={disabled}>
-        <option value='1'>One</option>
-        <option value='2'>Two</option>
-        <option value='3'>Three</option>
-      </select>
-    </div>
+    <>
+      <div className='input-group mb-2'>
+        <label className='input-group-text'>Team A</label>
+        <select className='form-select form-select-sm' multiple disabled={disabled} value={aPlayers} onChange={e => {
+          const options = [...e.target.selectedOptions];
+          const values = options.map(option => option.value);
+          setAPlayers(values);
+        }}>
+          {availableAPlayers.map(({ id, pname }) => (
+            <option key={id} value={pname}>{pname}</option>
+          ))}
+        </select>
+      </div>
+      <div className='input-group mb-2'>
+        <label className='input-group-text'>Team B</label>
+        <select className='form-select form-select-sm' multiple disabled={disabled} value={bPlayers} onChange={e => {
+          const options = [...e.target.selectedOptions];
+          const values = options.map(option => option.value);
+          setBPlayers(values);
+        }}>
+          {availableBPlayers.map(({ id, pname }) => (
+            <option key={id} value={pname}>{pname}</option>
+          ))}
+        </select>
+      </div>
+    </>
   );
 }
 
-function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled, setGameType, gameType }) {
+function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled, setGameType, gameType, players }) {
   return (
     <>
       <Modal
@@ -140,7 +175,7 @@ function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled
         </Modal.Header>
         <Modal.Body>
           <div>
-            <label class='form-label'>Game Rules</label>
+            <label className='form-label'>Game Rules</label>
             <div className='input-group mb-2'>
               <input onChange={(event) => setPlayToScore(event.target.value)} type='number' className='form-control' placeholder='11' disabled={disabled && true} />
               <span className='input-group-text'>points</span>
@@ -152,9 +187,8 @@ function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled
               <label className={`btn btn-outline-primary ${disabled && 'disabled'}`} htmlFor='doubles'>Play Doubles</label>
             </div>
             <div>
-              <label class='form-label'>Players</label>
-              <PlayerSelect team={'A'} disabled={disabled} />
-              <PlayerSelect team={'B'} disabled={disabled} />
+              <label className='form-label'>Players</label>
+              <PlayerSelect disabled={disabled} players={players} />
             </div>
           </div>
         </Modal.Body>
