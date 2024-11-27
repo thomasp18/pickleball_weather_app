@@ -28,6 +28,8 @@ export default function Main() {
 
 // Displays the match history in a table
 function MatchData({ matches }) {
+    const reformatted = reformatMatches(matches);
+
     // Match history table
     return (
         <div className='container' style={{ overflow: 'auto' }}>
@@ -43,7 +45,7 @@ function MatchData({ matches }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {matches.map((value) => {
+                    {reformatted.map((value) => {
                         if (value.match_id) {
                             return (
                                 <tr key={value.match_id}>
@@ -61,4 +63,20 @@ function MatchData({ matches }) {
             </table>
         </div>
     );
+}
+
+function reformatMatches(matches) {
+    const reformat = matches.map((value) => {
+        const { teamA, teamB, ...rest } = value;
+        const a = value.teamA.map((a) => {
+            return a.pname;
+        });
+        const b = value.teamB.map((b) => {
+            return b.pname;
+        });
+        rest.teamA = a;
+        rest.teamB = b;
+        return rest;
+    });
+    return reformat;
 }

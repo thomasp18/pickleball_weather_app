@@ -22,9 +22,9 @@ function formatMatches(matchData) {
     for (let i = 0; i < matchData.length; i++) {
         const { pname, team, player_id, ...rest } = matchData[i];
         if (team === 'a') {
-            players.teamA.push(pname);
+            players.teamA.push({ player_id, pname });
         } else {
-            players.teamB.push(pname);
+            players.teamB.push({ player_id, pname });
         }
 
         // run this right before match cutover (on the last item in data for a match)

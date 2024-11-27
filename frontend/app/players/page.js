@@ -111,12 +111,22 @@ function calculatePlayerStats(players, matches) {
     }
   });
 
-  matches.forEach(({ player_id, team, ascore, bscore }) => {
-    const player = playerStats[player_id];
-    player.matches += 1;
-    if ((team === 'a' && ascore > bscore) || (team === 'b' && bscore > ascore)) {
-      player.wins += 1;
-    }
+  // refactor?
+  matches.forEach(({ teamA, teamB, ascore, bscore }) => {
+    teamA.forEach(({ player_id }) => {
+      const player = playerStats[player_id];
+      player.matches += 1;
+      if (ascore > bscore) {
+        player.wins += 1;
+      }
+    });
+    teamB.forEach(({ player_id }) => {
+      const player = playerStats[player_id];
+      player.matches += 1;
+      if (bscore > ascore) {
+        player.wins += 1;
+      }
+    });
   });
 
   for (const p in playerStats) {

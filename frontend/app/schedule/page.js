@@ -26,6 +26,8 @@ export default function Main() {
 }
 
 function ScheduleData({ schedule, matches }) {
+    const reformat = reformatMatches(matches);
+
     return (
         <div className='container'>
             <Accordion >
@@ -46,7 +48,7 @@ function ScheduleData({ schedule, matches }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {matches.map((mval) => {
+                                        {reformat.map((mval) => {
                                             if (mval.mdate === scheddate) {
                                                 return (
                                                     <tr key={mval.match_id}>
@@ -70,3 +72,18 @@ function ScheduleData({ schedule, matches }) {
     );
 }
 
+function reformatMatches(matches) {
+    const reformat = matches.map((value) => {
+        const { teamA, teamB, ...rest } = value;
+        const a = value.teamA.map((a) => {
+            return a.pname;
+        });
+        const b = value.teamB.map((b) => {
+            return b.pname;
+        });
+        rest.teamA = a;
+        rest.teamB = b;
+        return rest;
+    });
+    return reformat;
+}
