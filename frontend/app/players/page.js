@@ -111,21 +111,20 @@ function calculatePlayerStats(players, matches) {
     }
   });
 
-  // refactor?
+  function calculateWinRate(id, winner, loser) {
+    const player = playerStats[id];
+    player.matches += 1;
+    if (winner > loser) {
+      player.wins += 1;
+    }
+  }
+
   matches.forEach(({ teamA, teamB, ascore, bscore }) => {
     teamA.forEach(({ player_id }) => {
-      const player = playerStats[player_id];
-      player.matches += 1;
-      if (ascore > bscore) {
-        player.wins += 1;
-      }
+      calculateWinRate(player_id, ascore, bscore);
     });
     teamB.forEach(({ player_id }) => {
-      const player = playerStats[player_id];
-      player.matches += 1;
-      if (bscore > ascore) {
-        player.wins += 1;
-      }
+      calculateWinRate(player_id, bscore, ascore);
     });
   });
 

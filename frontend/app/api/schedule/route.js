@@ -8,6 +8,7 @@ const sql = postgres('postgresql://piko:pikopw@localhost:5432/piko-db?ssl=false'
 
 export async function GET() {
     return NextResponse.json(await sql`
-        select * from schedule;
+        select * from schedule 
+        order by sdate
     `);
 }
