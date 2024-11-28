@@ -10,9 +10,11 @@ const useRequest = (method: Method, url: string) => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
-    axios.request({
-      url, method
-    })
+    axios
+      .request({
+        url,
+        method,
+      })
       .then((res) => {
         setResponse(res.data);
       })
