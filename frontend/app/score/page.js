@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import '../mobile.css';
 
 export default function Score() {
   const [gameType, setGameType] = useState('Doubles');
@@ -23,7 +24,7 @@ export default function Score() {
 
   return (
     <div className='container-sm d-flex flex-column'>
-      <h1 className='display-3'>Scorekeeper</h1>
+      <h1 className='display-3 title'>Scorekeeper</h1>
 
       {/* Settings */}
       <div className='mb-5'>

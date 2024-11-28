@@ -4,12 +4,17 @@ import { Image, Nav, Navbar, NavbarToggle } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
 function Navibar() {
+    let page = {
+        '/': 'Home', '/schedule': 'Schedule', '/score': 'Scorekeeper', '/matches': 'Match History', '/players': 'Players'
+    };
+
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
                 <Navbar.Brand href="/">
                     <Image alt='' src='./favicon.ico' style={{ borderRadius: 7 }}></Image>
                 </Navbar.Brand>
+                <h1 className='d-lg-none display-3'>{page[usePathname()]}</h1>
                 <NavbarToggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto" variant='underline' activeKey={usePathname()}>

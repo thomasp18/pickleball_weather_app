@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import '../mobile.css';
 
 export default function Players() {
   const { response: players, error: playersError, loading: playersLoading, refetch } = useRequest('GET', '/api/players');
@@ -65,7 +66,7 @@ export default function Players() {
   }
 
   return <div className='container-sm d-flex flex-column'>
-    <h1 className='display-3'>Players</h1>
+    <h1 className='display-3 title'>Players</h1>
 
     {/* Settings */}
     <div>

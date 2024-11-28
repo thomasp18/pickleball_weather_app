@@ -1,0 +1,15 @@
+@media (width <=1250px) {
+    .weather {
+        width: 85%;
+    }
+
+    .title {
+        display: none;
+    }
+}
+
+@media (width > 1250px) {
+    .weather {
+        width: 25%;
+    }
+}

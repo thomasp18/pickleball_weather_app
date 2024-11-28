@@ -3,6 +3,7 @@
 import Error from '@/components/loading-and-error/error';
 import Loading from '@/components/loading-and-error/loading';
 import useRequest from '@/utils/useRequest';
+import '../mobile.css';
 
 // Main component
 export default function Main() {
@@ -19,7 +20,7 @@ export default function Main() {
     // Once there're no errors and is done loading, render the match data
     return (
         <div>
-            <h1 className='display-1 text-center p-auto m-auto pt-2'>Match History</h1>
+            <h1 className='display-1 text-center p-auto m-auto pt-2 title'>Match History</h1>
             <br />
             <MatchData matches={matchesDB} />
         </div>

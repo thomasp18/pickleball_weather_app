@@ -3,6 +3,7 @@ import Error from '@/components/loading-and-error/error';
 import Loading from '@/components/loading-and-error/loading';
 import useRequest from '@/utils/useRequest';
 import { Accordion } from 'react-bootstrap';
+import '../mobile.css';
 
 export default function Main() {
     const { response: scheduleDB, error: scheduleError, loading: scheduleLoading } = useRequest('GET', '/api/schedule');
@@ -18,7 +19,7 @@ export default function Main() {
 
     return (
         <div>
-            <h1 className='display-1 text-center p-auto m-auto pt-2'>Schedule</h1>
+            <h1 className='display-1 text-center p-auto m-auto pt-2 title'>Schedule</h1>
             <br />
             <ScheduleData schedule={scheduleDB} matches={matchesDB} />
         </div>

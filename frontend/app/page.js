@@ -6,6 +6,8 @@ import useRequest from './utils/useRequest';
 import Button from 'react-bootstrap/Button';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { OverlayTrigger } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
+import './mobile.css';
 
 // Main component
 export default function Home() {
@@ -36,8 +38,6 @@ export default function Home() {
 // Displays the weather data in a more readable state
 function WeatherData({ apiData }) {
   // Seperate the API data from today and the rest of the week
-  const todayData = apiData[0];
-  const future = apiData.slice(1, 7);
   const [marked, setMarked] = useState(false);
   const markDay = marked ? 'marked' : '';
 
@@ -56,7 +56,6 @@ function WeatherData({ apiData }) {
     'Slight snow showers': 'qi-406', 'Heavy snow showers': 'qi-406-fill', 'Slight or moderate thunderstorm': 'qi-303-fill',
     'Slight hail thunderstorm': 'qi-304', 'Heavy hail thunderstorm': 'qi-304-fill'
   };
-  let todayWIcon = icon[todayData.weathercode];
 
   return (
     <>
@@ -73,55 +72,39 @@ function WeatherData({ apiData }) {
             <button type="button" data-bs-target="#weatherCarousel" data-bs-slide-to="6" aria-label="wd7"></button>
           </div>
           <div className="carousel-inner">
-            <div className="carousel-item active">
-              <div className='container-fluid'>
-                <div className='row'>
-                  <div className='col' >
-                    <div className='card text-center'>
-                      <i className={todayWIcon} style={{ fontSize: '150px' }}></i>
-                      <div className='card-body text-center'>
-                        <div style={{ display: 'inline-block', textAlign: 'left' }}>
-                          <h5 className='mb-0'><b>Today</b></h5>
-                          <p className="card-title mt-0"><small className='text-body-secondary'>{todayData.date}</small></p>
-                          <li className='card-text'>Temperature: {todayData.temperature}°F</li>
-                          <li className='card-text'>Humidity: {todayData.humidity}%</li>
-                          <li className='card-text'>Wind: {todayData.wind} mph</li>
-                          <li className='card-text'>Rain Chance: {todayData.precipitation}%</li>
-                          <li className='card-text'>Weather Condition: {todayData.weathercode}</li>
-                        </div>
-                      </div>
-                      <div className='card-footer text-center'>
-                        <div className='row justify-content-end'>
-                          <p className='card-text'>Judgement: <b>{todayData.judgement}</b></p>
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {future.map((value) => {
+            {apiData.map((value, index) => {
               let apiDate = value.date;
               const d = new Date(apiDate);
               let day = weekday[d.getDay()];
               let weatherIcon = icon[value.weathercode];
 
               return (
-                <div key={apiDate} className="carousel-item">
+                <div key={apiDate} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
                   <div className={`card text-center ${markDay}`}>
-                    <i className={weatherIcon} style={{ fontSize: '150px' }}></i>
+                    <i className={`mb-0 ${weatherIcon}`} style={{ fontSize: '150px' }}></i>
                     <div className='card-body text-center'>
-                      <div style={{ display: 'inline-block', textAlign: 'left' }}>
-                        <h5 className='mb-0'><b>{day}</b></h5>
-                        <p className='card-title mt-0'><small className='text-body-secondary'>{apiDate}</small></p>
-                        <li className='card-text'>Temperature: {value.temperature}°F</li>
-                        <li className='card-text'>Humidity: {value.humidity}%</li>
-                        <li className='card-text'>Wind: {value.wind} mph</li>
-                        <li className='card-text'>Rain Chance: {value.precipitation}%</li>
-                        <li className='card-text'>Weather Condition: {value.weathercode}</li>
+                      <div className='d-inline-block weather'>
+                        <h5 className='text-center fs-3 mt-0 mb-0'><b>{index === 0 ? 'Today' : day}</b></h5>
+                        <p className='card-title text-center mt-0 mb-0'><small className='text-body-secondary'>{apiDate}</small></p>
+                        <p className='card-text text-center fs-3 mt-0 mb-0'><b>{value.temperature}°F</b></p>
+                        <ListGroup variant="flush">
+                          <ListGroup.Item className='card-text'>
+                            <div className='float-start'>Humidity: </div>
+                            <div className='float-end'><b className='text-end'>{value.humidity}%</b></div>
+                          </ListGroup.Item>
+                          <ListGroup.Item className='card-text'>
+                            <div className='float-start'>Wind:</div>
+                            <div className='float-end'><b>{value.wind} mph</b></div>
+                          </ListGroup.Item>
+                          <ListGroup.Item className='card-text'>
+                            <div className='float-start'>Rain Chance: </div>
+                            <div className='float-end'><b>{value.precipitation}%</b></div>
+                          </ListGroup.Item>
+                          <ListGroup.Item className='card-text'>
+                            <div className='float-start'>Forecast: </div>
+                            <div className='float-end'><b>{value.weathercode}</b></div>
+                          </ListGroup.Item>
+                        </ListGroup>
                       </div>
                     </div>
                     <div className='card-footer text-center'>
@@ -178,7 +161,7 @@ function WeatherData({ apiData }) {
                   data-bs-slide-to={index}
                   variant={`${value.judgement === 'kms' ? '' : 'success'}`}
                 >
-                  <b>{day}</b>
+                  <b>{index === 0 ? 'Today' : day}</b>
                   <h1>{value.temperature}°F</h1>
                 </Button>
               </OverlayTrigger>
