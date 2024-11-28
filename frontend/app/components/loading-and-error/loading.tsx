@@ -6,7 +6,7 @@ function Loading() {
   const [numDots, setNumDots] = useState(3);
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setNumDots(num => {
+      setNumDots((num) => {
         const newNum = num + 1;
         return newNum > 3 ? 0 : newNum;
       });
@@ -15,7 +15,11 @@ function Loading() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const bananaSpaced = <div style={{ paddingBottom: '3rem' }}><Banana /></div>;
+  const bananaSpaced = (
+    <div style={{ paddingBottom: '3rem' }}>
+      <Banana />
+    </div>
+  );
 
   return <Template rotate emoji={bananaSpaced} text={`Loading${'.'.repeat(numDots)}`} />;
 }
