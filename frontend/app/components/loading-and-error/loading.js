@@ -1,3 +1,4 @@
+import Banana from '@/svg/banana';
 import { useEffect, useState } from 'react';
 import Template from './template';
 
@@ -14,7 +15,9 @@ function Loading() {
     return () => clearInterval(intervalId);
   }, []);
 
-  return <Template rotate emoji={'🍌'} text={`Loading${'.'.repeat(numDots)}`} />;
+  const bananaSpaced = <div style={{ paddingBottom: '3rem' }}><Banana /></div>;
+
+  return <Template rotate emoji={bananaSpaced} text={`Loading${'.'.repeat(numDots)}`} />;
 }
 
 export default Loading;
