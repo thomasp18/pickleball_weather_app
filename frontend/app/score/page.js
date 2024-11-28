@@ -15,6 +15,8 @@ export default function Score() {
   const [serveCounter, setServeCounter] = useState(2);
   const [aScore, setAScore] = useState(0);
   const [bScore, setBScore] = useState(0);
+  const [aPlayers, setAPlayers] = useState([]);
+  const [bPlayers, setBPlayers] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const { response: players, error: playersError, loading: playersLoading } = useRequest('GET', '/api/players');
   const winner = determineWinner(aScore, bScore, playToScore);
@@ -100,7 +102,7 @@ export default function Score() {
 
 
       {/* Modals */}
-      <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} setPlayToScore={setPlayToScore} disabled={disabled} setGameType={setGameType} gameType={gameType} players={players} />
+      <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} setPlayToScore={setPlayToScore} disabled={disabled} setGameType={setGameType} gameType={gameType} players={players} aPlayers={aPlayers} setAPlayers={setAPlayers} bPlayers={bPlayers} setBPlayers={setBPlayers} />
       <WinnerModal winner={winner} resetGame={resetGame} />
     </div>
   );
@@ -127,11 +129,12 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
   );
 }
 
-function PlayerSelect({ disabled, players }) {
-  const [aPlayers, setAPlayers] = useState([]);
-  const [bPlayers, setBPlayers] = useState([]);
+function PlayerSelect({ disabled, players, aPlayers, setAPlayers, bPlayers, setBPlayers }) {
+
   const availableAPlayers = players.filter(p => !bPlayers.includes(p.pname));
   const availableBPlayers = players.filter(p => !aPlayers.includes(p.pname));
+  console.log('A Players:', aPlayers);
+  console.log('B Players:', bPlayers);
 
   return (
     <>
@@ -163,7 +166,7 @@ function PlayerSelect({ disabled, players }) {
   );
 }
 
-function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled, setGameType, gameType, players }) {
+function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled, setGameType, gameType, players, aPlayers, setAPlayers, bPlayers, setBPlayers }) {
   return (
     <>
       <Modal
@@ -188,7 +191,7 @@ function SettingsModal({ showSettings, setShowSettings, setPlayToScore, disabled
             </div>
             <div>
               <label className='form-label'>Players</label>
-              <PlayerSelect disabled={disabled} players={players} />
+              <PlayerSelect disabled={disabled} players={players} aPlayers={aPlayers} setAPlayers={setAPlayers} bPlayers={bPlayers} setBPlayers={setBPlayers} />
             </div>
           </div>
         </Modal.Body>
