@@ -21,9 +21,6 @@
 }
 
 .emoji.rotate {
-    padding-left: 2rem;
-    padding-bottom: 3rem;
-
     --duration: 5000ms;
     animation-name: spin;
     animation-duration: var(--duration);
