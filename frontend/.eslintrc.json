@@ -1,7 +1,8 @@
 // https://stackoverflow.com/a/78714161
 {
   "extends": [
-    "next/core-web-vitals"
+    "next/core-web-vitals",
+    "plugin:prettier/recommended"
   ],
   "rules": {
     "@next/next/no-html-link-for-pages": 0,
