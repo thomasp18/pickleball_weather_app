@@ -27,6 +27,8 @@ export default function Score() {
     setBScore(0);
     setPossession('A');
     setServeCounter(2);
+    setAPlayers([]);
+    setBPlayers([]);
   }
 
   if (playersLoading) {
@@ -130,7 +132,6 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
 }
 
 function PlayerSelect({ disabled, players, aPlayers, setAPlayers, bPlayers, setBPlayers }) {
-
   const availableAPlayers = players.filter(p => !bPlayers.includes(p.pname));
   const availableBPlayers = players.filter(p => !aPlayers.includes(p.pname));
 
