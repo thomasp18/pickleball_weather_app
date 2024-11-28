@@ -133,8 +133,6 @@ function PlayerSelect({ disabled, players, aPlayers, setAPlayers, bPlayers, setB
 
   const availableAPlayers = players.filter(p => !bPlayers.includes(p.pname));
   const availableBPlayers = players.filter(p => !aPlayers.includes(p.pname));
-  console.log('A Players:', aPlayers);
-  console.log('B Players:', bPlayers);
 
   return (
     <>
