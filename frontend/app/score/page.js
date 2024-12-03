@@ -22,6 +22,38 @@ export default function Score() {
   const winner = determineWinner(aScore, bScore, playToScore);
   const disabled = winner ? true : false;
 
+  useEffect(() => {
+    if (winner && aPlayers.length != 0 && bPlayers.length != 0) {
+      addMatch(aScore, bScore, aPlayers, bPlayers);
+    };
+  }, [winner]);
+
+  async function addMatch(aScore, bScore, aPlayers, bPlayers) {
+    const url = '/api/matches';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          date: (new Date()).toISOString().split('T')[0],
+          aScore: aScore,
+          bScore: bScore,
+          aPlayers: aPlayers,
+          bPlayers: bPlayers
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   function resetGame() {
     setAScore(0);
     setBScore(0);
@@ -132,8 +164,8 @@ function ScoreButton({ team, inPossession, setPossession, serveCounter, setServe
 }
 
 function PlayerSelect({ disabled, players, aPlayers, setAPlayers, bPlayers, setBPlayers }) {
-  const availableAPlayers = players.filter(p => !bPlayers.includes(p.pname));
-  const availableBPlayers = players.filter(p => !aPlayers.includes(p.pname));
+  const availableAPlayers = players.filter(p => !bPlayers.includes(p.id));
+  const availableBPlayers = players.filter(p => !aPlayers.includes(p.id));
 
   return (
     <>
@@ -141,11 +173,11 @@ function PlayerSelect({ disabled, players, aPlayers, setAPlayers, bPlayers, setB
         <label className='input-group-text'>Team A</label>
         <select className='form-select form-select-sm' multiple disabled={disabled} value={aPlayers} onChange={e => {
           const options = [...e.target.selectedOptions];
-          const values = options.map(option => option.value);
+          const values = options.map(option => Number(option.value));
           setAPlayers(values);
         }}>
           {availableAPlayers.map(({ id, pname }) => (
-            <option key={id} value={pname}>{pname}</option>
+            <option key={id} value={id}>{pname}</option>
           ))}
         </select>
       </div>
@@ -153,11 +185,11 @@ function PlayerSelect({ disabled, players, aPlayers, setAPlayers, bPlayers, setB
         <label className='input-group-text'>Team B</label>
         <select className='form-select form-select-sm' multiple disabled={disabled} value={bPlayers} onChange={e => {
           const options = [...e.target.selectedOptions];
-          const values = options.map(option => option.value);
+          const values = options.map(option => Number(option.value));
           setBPlayers(values);
         }}>
           {availableBPlayers.map(({ id, pname }) => (
-            <option key={id} value={pname}>{pname}</option>
+            <option key={id} value={id}>{pname}</option>
           ))}
         </select>
       </div>
