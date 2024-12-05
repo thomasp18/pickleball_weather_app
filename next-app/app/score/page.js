@@ -57,13 +57,16 @@ export default function Score() {
     }
   }
 
-  function resetGame() {
+  function resetGame(retainPlayers = false) {
     setAScore(0);
     setBScore(0);
     setPossession('A');
     setServeCounter(2);
-    setAPlayers([]);
-    setBPlayers([]);
+
+    if (!retainPlayers) {
+      setAPlayers([]);
+      setBPlayers([]);
+    }
   }
 
   if (playersLoading) {
@@ -104,14 +107,26 @@ export default function Score() {
               <p className="card-text">
                 Team <b>{winner}</b> won! {randomEmoji()}
               </p>
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => {
-                  resetGame();
-                }}
-              >
-                Reset game
-              </button>
+              <div>
+                {(aPlayers.length != 0 || bPlayers.length != 0) && (
+                  <button
+                    className="btn btn-secondary btn-sm mx-2"
+                    onClick={() => {
+                      resetGame(true);
+                    }}
+                  >
+                    Rematch
+                  </button>
+                )}
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => {
+                    resetGame();
+                  }}
+                >
+                  Reset game
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -172,7 +187,7 @@ export default function Score() {
         bPlayers={bPlayers}
         setBPlayers={setBPlayers}
       />
-      <WinnerModal winner={winner} resetGame={resetGame} />
+      <WinnerModal winner={winner} resetGame={resetGame} aPlayers={aPlayers} bPlayers={bPlayers} />
     </div>
   );
 }
@@ -344,8 +359,11 @@ function SettingsModal({
   );
 }
 
-function WinnerModal({ winner, resetGame }) {
+function WinnerModal({ winner, resetGame, aPlayers, bPlayers }) {
   const [overrideShow, setOverrideShow] = useState(true);
+  const resetGameRetain = () => {
+    resetGame(true);
+  };
 
   useEffect(() => {
     setOverrideShow(true);
@@ -367,6 +385,11 @@ function WinnerModal({ winner, resetGame }) {
           <b>Team {winner}</b> won! {randomEmoji()}
         </Modal.Body>
         <Modal.Footer>
+          {(aPlayers.length != 0 || bPlayers.length != 0) && (
+            <Button variant="secondary" onClick={resetGameRetain}>
+              Rematch
+            </Button>
+          )}
           <Button variant="danger" onClick={resetGame}>
             Reset game
           </Button>
