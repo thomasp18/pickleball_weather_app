@@ -126,7 +126,7 @@ function calculatePlayerStats(players, matches) {
     if (player.matches < 5) player.titles.push('Sprout');
     if (player.matches > 30) player.titles.push('Veteran');
     if (player.matches > 100) player.titles.push('Legend');
-    if (player.winrate >= 0.75) player.titles.push('Farmer');
+    if (player.matches > 5 && player.winrate >= 0.75) player.titles.push('Farmer');
   }
 
   return playerStats;
