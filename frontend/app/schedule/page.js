@@ -33,7 +33,7 @@ function ScheduleData({ schedule, matches }) {
         <div className='container'>
             <Accordion >
                 {schedule.map((sval) => {
-                    let scheddate = new Date(sval.sdate).toDateString();
+                    let scheddate = new Date(sval.sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
                     return (
                         <Accordion.Item key={sval.id} eventKey={sval.id - 1}>
                             <Accordion.Header>{scheddate}</Accordion.Header>

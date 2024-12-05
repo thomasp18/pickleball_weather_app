@@ -1,23 +1,22 @@
 'use client';
-import { useState } from 'react';
-import Error from './components/loading-and-error/error';
-import Loading from './components/loading-and-error/loading';
-import useRequest from './utils/useRequest';
+import { ListGroup, OverlayTrigger } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { OverlayTrigger } from 'react-bootstrap';
-import { ListGroup } from 'react-bootstrap';
+import Error from './components/loading-and-error/error';
+import Loading from './components/loading-and-error/loading';
 import './mobile.css';
+import useRequest from './utils/useRequest';
 
 // Main component
 export default function Home() {
-  const { response, error, loading } = useRequest('GET', '/api/weather');
+  const { response: weather, error: weatherErr, loading: weatherLoading } = useRequest('GET', '/api/weather');
+  const { response: schedule, error: scheduleErr, loading: scheduleLoading } = useRequest('GET', '/api/schedule');
 
-  if (loading) {
+  if (weatherLoading || scheduleLoading) {
     return <Loading />;
   }
 
-  if (error) {
+  if (weatherErr || scheduleErr) {
     return <Error />;
   }
 
@@ -26,7 +25,7 @@ export default function Home() {
       <h1 className='display-1 text-center p-auto m-auto pt-2'>PikoWeatherer</h1>
       <br />
       <div className='text-center'>
-        <WeatherData apiData={response} />
+        <WeatherData weatherData={weather} scheduleData={schedule}/>
       </div>
       <br />
       <div className='text-center mt-2 mb-4'>
@@ -36,13 +35,9 @@ export default function Home() {
 }
 
 // Displays the weather data in a more readable state
-function WeatherData({ apiData }) {
-  // Seperate the API data from today and the rest of the week
-  const [marked, setMarked] = useState(false);
-  const markDay = marked ? 'marked' : '';
-
+function WeatherData({ weatherData, scheduleData }) {
   let weekday = {
-    0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'
+    1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday', 0: 'Sunday'
   };
 
   let icon = {
@@ -56,6 +51,45 @@ function WeatherData({ apiData }) {
     'Slight snow showers': 'qi-406', 'Heavy snow showers': 'qi-406-fill', 'Slight or moderate thunderstorm': 'qi-303-fill',
     'Slight hail thunderstorm': 'qi-304', 'Heavy hail thunderstorm': 'qi-304-fill'
   };
+
+  async function AddDate(scheduleDate) {
+    if (scheduleDate === '') {
+      return;
+    }
+  
+    const url = '/api/schedule';
+    let duplicate = false;
+  
+    scheduleData.forEach((scheduleData) => {
+      const { sdate } = scheduleData;
+      const formatSdate = new Date(sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
+      
+      if (formatSdate === scheduleDate.toDateString()) {
+        duplicate = true;
+      }
+    });
+  
+    if (duplicate) {
+      return;
+    }
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ 'sdate': scheduleDate }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      
+    } catch (error) {
+      console.error(error.message);
+    };
+  }
 
   return (
     <>
@@ -72,15 +106,15 @@ function WeatherData({ apiData }) {
             <button type="button" data-bs-target="#weatherCarousel" data-bs-slide-to="6" aria-label="wd7"></button>
           </div>
           <div className="carousel-inner">
-            {apiData.map((value, index) => {
+            {weatherData.map((value, index) => {
               let apiDate = value.date;
-              const d = new Date(apiDate);
+              const d = new Date(apiDate + 'T00:00:00.000-05:00');
               let day = weekday[d.getDay()];
               let weatherIcon = icon[value.weathercode];
 
               return (
                 <div key={apiDate} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                  <div className={`card text-center ${markDay}`}>
+                  <div className='card text-center'>
                     <i className={`mb-0 ${weatherIcon}`} style={{ fontSize: '150px' }}></i>
                     <div className='card-body text-center'>
                       <div className='d-inline-block weather'>
@@ -109,15 +143,10 @@ function WeatherData({ apiData }) {
                     </div>
                     <div className='card-footer text-center'>
                       <div className='row justify-content-center'>
-                        <div className="col-sm">
+                        <div className="col-sm pb-5">
                           <p className='card-text'>Judgement: <b>{value.judgement}</b></p>
+                          <Button type='button' onClick={() => AddDate(d)}>Schedule Date</Button>
                         </div>
-                        {/* <div className='col-sm'>
-                          <button className="btn btn-secondary" onClick={() => setMarked(!marked)}>mark</button>
-                        </div> */}
-                        <br />
-                        <br />
-                        <br />
                       </div>
                     </div>
                   </div>
@@ -141,8 +170,8 @@ function WeatherData({ apiData }) {
       {/* Scroll menu for the weekdays */}
       <div className='scrollmenu'>
         <div className="btn-group" role="group" aria-label="Basic example">
-          {apiData.map((value, index) => {
-            const d = new Date(value.date);
+          {weatherData.map((value, index) => {
+            const d = new Date(value.date + 'T00:00:00.000-05:00');
             let day = weekday[d.getDay()];
             const judge = {
               'kms': 'this is not peak',
