@@ -20,3 +20,55 @@ Welcome to the Pickleball Weather App!
 ### Starting NextJs
 
 `npm run dev`
+
+
+
+
+# Match History Feature
+
+PAGES
+Match History Page
+- list of matches (in a table)
+  - players (on teams)
+  - score
+  - date
+
+Players Page
+- list all players
+- click a player for more info
+  - match history
+  - win rate
+    - titles (e.g., farmer, shitter)
+- Register Players
+
+Schedule Page
+- mark dates for when people want to play
+- list
+- show matches that happened on a day in the day (accordion)
+
+Nav bar
+
+Input matches
+- score page -> save match
+
+
+DATA IMPLEMENTATION
+Store Match History
+- match_id
+- Scores
+  - team A score
+  - team B score
+- Players
+  - which team
+  - player-id
+  - first name
+- game date
+Schedule (Marked Days)
+- dates list
+
+
+Tables
+- Matches <- MatchPlayer -> Players
+- Schedule (Marked Days)
+
+🐵
