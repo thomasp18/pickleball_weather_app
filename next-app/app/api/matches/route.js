@@ -3,16 +3,18 @@ import postgres from 'postgres';
 
 const sql = postgres('postgresql://piko:pikopw@localhost:5432/piko-db?ssl=false', {
   idle_timeout: 20,
-  max_lifetime: 60 * 30
+  max_lifetime: 60 * 30,
 });
 
 export async function GET() {
-  return NextResponse.json(await sql`
+  return NextResponse.json(
+    await sql`
     SELECT match_id, mdate, ascore, bscore, player_id, team, pname
     FROM matches m
     JOIN matches_players_rel mpr on m.id = mpr.match_id
     JOIN players p on mpr.player_id = p.id;
-  `);
+  `,
+  );
 }
 
 export async function POST(request) {
