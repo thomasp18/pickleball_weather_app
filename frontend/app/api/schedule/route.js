@@ -25,15 +25,23 @@ export async function POST(request) {
     `);
 }
 
+export async function DELETE(request) {
+  const { id } = await request.json();
+  return NextResponse.json(await sql`
+      DELETE FROM schedule
+      WHERE id = ${id};
+    `);
+}
+
 function sanitize(string) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        '\'': '&#x27;',
-        '/': '&#x2F;',
-    };
-    const reg = /[&<>"'/]/ig;
-    return string.replace(reg, (match)=>(map[match]));
-  }
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    '\'': '&#x27;',
+    '/': '&#x2F;',
+  };
+  const reg = /[&<>"'/]/ig;
+  return string.replace(reg, (match) => (map[match]));
+}
