@@ -30,7 +30,7 @@ function ScheduleData({ schedule, matches }) {
     const reformat = reformatMatches(matches);
 
     return (
-        <div className='container'>
+        <div className='container pb-5'>
             <Accordion >
                 {schedule.map((sval) => {
                     let scheddate = new Date(sval.sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
