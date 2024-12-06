@@ -52,7 +52,7 @@ export default function Home() {
 function WeatherData({ weatherData, scheduleData }) {
   const [show, setShow] = useState(false);
   const [dateRequested, setDateRequested] = useState(null);
-  let weekday = {
+  const weekday = {
     1: 'Monday',
     2: 'Tuesday',
     3: 'Wednesday',
@@ -61,12 +61,12 @@ function WeatherData({ weatherData, scheduleData }) {
     6: 'Saturday',
     0: 'Sunday',
   };
-  let icon = {
+  const icon = {
     'Clear sky': 'qi-100',
     'Mainly clear': 'qi-102',
     'Partly cloudy': 'qi-103',
-    Overcast: 'qi-104',
-    Fog: 'qi-501',
+    'Overcast': 'qi-104',
+    'Fog': 'qi-501',
     'Depositing Rime Fog': 'qi-2377',
     'Light drizzle': 'qi-309',
     'Moderate drizzle': 'qi-311',
@@ -192,10 +192,10 @@ function WeatherData({ weatherData, scheduleData }) {
           </div>
           <div className='carousel-inner'>
             {weatherData.map((value, index) => {
-              let apiDate = value.date;
+              const apiDate = value.date;
               const d = new Date(apiDate + 'T00:00:00.000-05:00');
-              let day = weekday[d.getDay()];
-              let weatherIcon = icon[value.weathercode];
+              const day = weekday[d.getDay()];
+              const weatherIcon = icon[value.weathercode];
 
               return (
                 <div
