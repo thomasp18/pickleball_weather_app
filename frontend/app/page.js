@@ -19,7 +19,54 @@ export default function Home() {
     response: schedule,
     error: scheduleErr,
     loading: scheduleLoading,
+    refetch
   } = useRequest('GET', '/api/schedule');
+  const [show, setShow] = useState(false);
+  const [dateRequested, setDateRequested] = useState(null);
+
+  async function addDate(scheduleDate) {
+    if (scheduleDate === '') {
+      return;
+    }
+
+    const url = '/api/schedule';
+    let duplicate = false;
+
+    schedule.forEach((schedule) => {
+      const { sdate } = schedule;
+      const formatSdate = new Date(
+        sdate.slice(0, 10) + 'T00:00:00.000-05:00'
+      ).toDateString();
+
+      if (formatSdate === scheduleDate.toDateString()) {
+        duplicate = true;
+      }
+    });
+
+    if (duplicate) {
+      setDateRequested('error');
+      return;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ sdate: scheduleDate }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      refetch();
+      setDateRequested('success');
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
   if (weatherLoading || scheduleLoading) {
     return <Loading />;
@@ -36,7 +83,7 @@ export default function Home() {
       </h1>
       <br />
       <div className='text-center'>
-        <WeatherData weatherData={weather} scheduleData={schedule} />
+        <WeatherData weatherData={weather} addDate={addDate} show={show} setShow={setShow} dateRequested={dateRequested} />
       </div>
       <br />
       <div className='text-center mt-2 mb-4'>
@@ -49,9 +96,7 @@ export default function Home() {
 }
 
 // Displays the weather data in a more readable state
-function WeatherData({ weatherData, scheduleData }) {
-  const [show, setShow] = useState(false);
-  const [dateRequested, setDateRequested] = useState(null);
+function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
   const weekday = {
     1: 'Monday',
     2: 'Tuesday',
@@ -91,49 +136,6 @@ function WeatherData({ weatherData, scheduleData }) {
     'Slight hail thunderstorm': 'qi-304',
     'Heavy hail thunderstorm': 'qi-304-fill',
   };
-
-  async function addDate(scheduleDate) {
-    if (scheduleDate === '') {
-      return;
-    }
-
-    const url = '/api/schedule';
-    let duplicate = false;
-
-    scheduleData.forEach((scheduleData) => {
-      const { sdate } = scheduleData;
-      const formatSdate = new Date(
-        sdate.slice(0, 10) + 'T00:00:00.000-05:00'
-      ).toDateString();
-
-      if (formatSdate === scheduleDate.toDateString()) {
-        duplicate = true;
-      }
-    });
-
-    if (duplicate) {
-      setDateRequested('error');
-      return;
-    }
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({ sdate: scheduleDate }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-
-      setDateRequested('success');
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 
   return (
     <>
@@ -196,6 +198,7 @@ function WeatherData({ weatherData, scheduleData }) {
               const d = new Date(apiDate + 'T00:00:00.000-05:00');
               const day = weekday[d.getDay()];
               const weatherIcon = icon[value.weathercode];
+              const schedDate = () => { addDate(d); setShow(true); };
 
               return (
                 <div
@@ -254,7 +257,7 @@ function WeatherData({ weatherData, scheduleData }) {
                           <p className='card-text'>
                             Judgement: <b>{value.judgement}</b>
                           </p>
-                          <Button type='button' onClick={() => { addDate(d); setShow(true); }}>
+                          <Button type='button' onClick={schedDate}>
                             Schedule Date
                           </Button>
                           <ToastContainer className='position-fixed p-3' position='bottom-end'>
