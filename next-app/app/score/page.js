@@ -108,7 +108,7 @@ export default function Score() {
                 Team <b>{winner}</b> won! {randomEmoji()}
               </p>
               <div>
-                {(aPlayers.length != 0 || bPlayers.length != 0) && (
+                {aPlayers.length != 0 && bPlayers.length != 0 && (
                   <button
                     className="btn btn-secondary btn-sm mx-2"
                     onClick={() => {
@@ -385,7 +385,7 @@ function WinnerModal({ winner, resetGame, aPlayers, bPlayers }) {
           <b>Team {winner}</b> won! {randomEmoji()}
         </Modal.Body>
         <Modal.Footer>
-          {(aPlayers.length != 0 || bPlayers.length != 0) && (
+          {aPlayers.length != 0 && bPlayers.length != 0 && (
             <Button variant="secondary" onClick={resetGameRetain}>
               Rematch
             </Button>
