@@ -390,7 +390,12 @@ function WinnerModal({ winner, resetGame, aPlayers, bPlayers }) {
               Rematch
             </Button>
           )}
-          <Button variant="danger" onClick={resetGame}>
+          <Button
+            variant="danger"
+            onClick={() => {
+              resetGame();
+            }}
+          >
             Reset game
           </Button>
         </Modal.Footer>
