@@ -18,7 +18,6 @@ export async function GET() {
 
 export async function POST(request) {
   const { sdate } = await request.json();
-  sanitize(sdate);
   return NextResponse.json(await sql`
       INSERT INTO schedule (sdate)
       VALUES (${sdate});
@@ -31,17 +30,4 @@ export async function DELETE(request) {
       DELETE FROM schedule
       WHERE id = ${id};
     `);
-}
-
-function sanitize(string) {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    '\'': '&#x27;',
-    '/': '&#x2F;',
-  };
-  const reg = /[&<>"'/]/ig;
-  return string.replace(reg, (match) => (map[match]));
 }
