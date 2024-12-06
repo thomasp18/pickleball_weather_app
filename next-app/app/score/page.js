@@ -134,34 +134,56 @@ export default function Score() {
         )}
 
         {/* Score + buttons */}
-        <div className="d-flex flex-row">
-          <div>
-            <p className="display-3 text-center">{aScore}</p>
-            <ScoreButton
-              team={'A'}
-              inPossession={possession === 'A'}
-              setPossession={setPossession}
-              serveCounter={serveCounter}
-              setServeCounter={setServeCounter}
-              gameType={gameType}
-              score={aScore}
-              setScore={setAScore}
-              disabled={disabled}
-            />
-          </div>
-          <div>
-            <p className="display-3 text-center">{bScore}</p>
-            <ScoreButton
-              team={'B'}
-              inPossession={possession === 'B'}
-              setPossession={setPossession}
-              serveCounter={serveCounter}
-              setServeCounter={setServeCounter}
-              gameType={gameType}
-              score={bScore}
-              setScore={setBScore}
-              disabled={disabled}
-            />
+        <div className="container text-center">
+          <div className="row gx-0">
+            <div className="col">
+              <p className="display-3 text-center">{aScore}</p>
+              <ScoreButton
+                team={'A'}
+                inPossession={possession === 'A'}
+                setPossession={setPossession}
+                serveCounter={serveCounter}
+                setServeCounter={setServeCounter}
+                gameType={gameType}
+                score={aScore}
+                setScore={setAScore}
+                disabled={disabled}
+              />
+              {aPlayers.length != 0 ? (
+                <p className="text-body-secondary fst-italic text-center text-wrap w-100">
+                  {players
+                    .filter((p) => aPlayers.includes(p.id))
+                    .map((p) => p.pname)
+                    .join(', ')}
+                </p>
+              ) : (
+                <div style={{ minHeight: '40px' }}></div>
+              )}
+            </div>
+            <div className="col">
+              <p className="display-3 text-center">{bScore}</p>
+              <ScoreButton
+                team={'B'}
+                inPossession={possession === 'B'}
+                setPossession={setPossession}
+                serveCounter={serveCounter}
+                setServeCounter={setServeCounter}
+                gameType={gameType}
+                score={bScore}
+                setScore={setBScore}
+                disabled={disabled}
+              />
+              {bPlayers.length != 0 ? (
+                <p className="text-body-secondary fst-italic text-center text-wrap w-100">
+                  {players
+                    .filter((p) => bPlayers.includes(p.id))
+                    .map((p) => p.pname)
+                    .join(', ')}
+                </p>
+              ) : (
+                <div style={{ minHeight: '40px' }}></div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -206,7 +228,7 @@ function ScoreButton({
   return (
     <>
       <button
-        className={`mx-2 btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`}
+        className={`mb-2 btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`}
         onClick={() => {
           if (inPossession) {
             setScore(score + 1);
