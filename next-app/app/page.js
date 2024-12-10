@@ -19,7 +19,7 @@ export default function Home() {
     response: schedule,
     error: scheduleErr,
     loading: scheduleLoading,
-    refetch
+    refetch,
   } = useRequest('GET', '/api/schedule');
   const [show, setShow] = useState(false);
   const [dateRequested, setDateRequested] = useState(null);
@@ -29,9 +29,7 @@ export default function Home() {
 
     schedule.forEach((schedule) => {
       const { sdate } = schedule;
-      const formatSdate = new Date(
-        sdate.slice(0, 10) + 'T00:00:00.000-05:00'
-      ).toDateString();
+      const formatSdate = new Date(sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
 
       if (formatSdate === date.toDateString()) {
         duplicate = true;
@@ -83,16 +81,21 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className='display-1 text-center p-auto m-auto pt-2'>
-        PikoWeatherer
-      </h1>
+      <h1 className="display-1 text-center p-auto m-auto pt-2">PikoWeatherer</h1>
       <br />
-      <div className='text-center'>
-        <WeatherData weatherData={weather} addDate={addDate} show={show} setShow={setShow} dateRequested={dateRequested} dupe={scheduleDupe} />
+      <div className="text-center">
+        <WeatherData
+          weatherData={weather}
+          addDate={addDate}
+          show={show}
+          setShow={setShow}
+          dateRequested={dateRequested}
+          dupe={scheduleDupe}
+        />
       </div>
       <br />
-      <div className='text-center mt-2 mb-4'>
-        <a className='btn btn-primary' href='/score'>
+      <div className="text-center mt-2 mb-4">
+        <a className="btn btn-primary" href="/score">
           Play Now!
         </a>
       </div>
@@ -115,8 +118,8 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
     'Clear sky': 'qi-100',
     'Mainly clear': 'qi-102',
     'Partly cloudy': 'qi-103',
-    'Overcast': 'qi-104',
-    'Fog': 'qi-501',
+    Overcast: 'qi-104',
+    Fog: 'qi-501',
     'Depositing Rime Fog': 'qi-2377',
     'Light drizzle': 'qi-309',
     'Moderate drizzle': 'qi-311',
@@ -145,136 +148,139 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
   return (
     <>
       {/* Weather data carousel */}
-      <div className='container-sm'>
-        <div
-          id='weatherCarousel'
-          className='carousel slide'
-          data-bs-ride='false'
-        >
-          <div className='carousel-indicators'>
+      <div className="container-sm">
+        <div id="weatherCarousel" className="carousel slide" data-bs-ride="false">
+          <div className="carousel-indicators">
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='0'
-              className='active'
-              aria-current='true'
-              aria-label='wd1'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="0"
+              className="active"
+              aria-current="true"
+              aria-label="wd1"
             ></button>
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='1'
-              aria-label='wd2'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="1"
+              aria-label="wd2"
             ></button>
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='2'
-              aria-label='wd3'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="2"
+              aria-label="wd3"
             ></button>
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='3'
-              aria-label='wd4'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="3"
+              aria-label="wd4"
             ></button>
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='4'
-              aria-label='wd5'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="4"
+              aria-label="wd5"
             ></button>
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='5'
-              aria-label='wd6'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="5"
+              aria-label="wd6"
             ></button>
             <button
-              type='button'
-              data-bs-target='#weatherCarousel'
-              data-bs-slide-to='6'
-              aria-label='wd7'
+              type="button"
+              data-bs-target="#weatherCarousel"
+              data-bs-slide-to="6"
+              aria-label="wd7"
             ></button>
           </div>
-          <div className='carousel-inner'>
+          <div className="carousel-inner">
             {weatherData.map((value, index) => {
               const apiDate = value.date;
               const d = new Date(apiDate + 'T00:00:00.000-05:00');
               const day = weekday[d.getDay()];
               const weatherIcon = icon[value.weathercode];
-              const schedDate = () => { addDate(d); setShow(true); };
+              const schedDate = () => {
+                addDate(d);
+                setShow(true);
+              };
 
               return (
-                <div
-                  key={apiDate}
-                  className={`carousel-item ${index === 0 ? 'active' : ''}`}
-                >
-                  <div className='card text-center'>
-                    <i
-                      className={`mb-0 ${weatherIcon}`}
-                      style={{ fontSize: '150px' }}
-                    ></i>
-                    <div className='card-body text-center'>
-                      <div className='d-inline-block weather'>
-                        <h5 className='text-center fs-3 mt-0 mb-0'>
+                <div key={apiDate} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                  <div className="card text-center">
+                    <i className={`mb-0 ${weatherIcon}`} style={{ fontSize: '150px' }}></i>
+                    <div className="card-body text-center">
+                      <div className="d-inline-block weather">
+                        <h5 className="text-center fs-3 mt-0 mb-0">
                           <b>{index === 0 ? 'Today' : day}</b>
                         </h5>
-                        <p className='card-title text-center mt-0 mb-0'>
-                          <small className='text-body-secondary'>
-                            {apiDate}
-                          </small>
+                        <p className="card-title text-center mt-0 mb-0">
+                          <small className="text-body-secondary">{apiDate}</small>
                         </p>
-                        <p className='card-text text-center fs-3 mt-0 mb-0'>
+                        <p className="card-text text-center fs-3 mt-0 mb-0">
                           <b>{value.temperature}°F</b>
                         </p>
-                        <ListGroup variant='flush'>
-                          <ListGroup.Item className='card-text'>
-                            <div className='float-start'>Humidity: </div>
-                            <div className='float-end'>
-                              <b className='text-end'>{value.humidity}%</b>
+                        <ListGroup variant="flush">
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Humidity: </div>
+                            <div className="float-end">
+                              <b className="text-end">{value.humidity}%</b>
                             </div>
                           </ListGroup.Item>
-                          <ListGroup.Item className='card-text'>
-                            <div className='float-start'>Wind:</div>
-                            <div className='float-end'>
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Wind:</div>
+                            <div className="float-end">
                               <b>{value.wind} mph</b>
                             </div>
                           </ListGroup.Item>
-                          <ListGroup.Item className='card-text'>
-                            <div className='float-start'>Rain Chance: </div>
-                            <div className='float-end'>
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Rain Chance: </div>
+                            <div className="float-end">
                               <b>{value.precipitation}%</b>
                             </div>
                           </ListGroup.Item>
-                          <ListGroup.Item className='card-text'>
-                            <div className='float-start'>Forecast: </div>
-                            <div className='float-end'>
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Forecast: </div>
+                            <div className="float-end">
                               <b>{value.weathercode}</b>
                             </div>
                           </ListGroup.Item>
                         </ListGroup>
                       </div>
                     </div>
-                    <div className='card-footer text-center'>
-                      <div className='row justify-content-center'>
-                        <div className='col-sm pb-5'>
-                          <p className='card-text'>
+                    <div className="card-footer text-center">
+                      <div className="row justify-content-center">
+                        <div className="col-sm pb-5">
+                          <p className="card-text">
                             Judgement: <b>{value.judgement}</b>
                           </p>
-                          <Button type='button' onClick={schedDate}>
+                          <Button type="button" onClick={schedDate}>
                             Schedule Date
                           </Button>
-                          <ToastContainer className='position-fixed p-3' position='bottom-end'>
+                          <ToastContainer className="position-fixed p-3" position="bottom-end">
                             <Toast onClose={() => setShow(false)} show={show} delay={6000} autohide>
                               <Toast.Header>
-                                <strong className="me-auto">{dateRequested === 'success' ? 'Date scheduled' : 'Date already scheduled'}</strong>
+                                <strong className="me-auto">
+                                  {dateRequested === 'success'
+                                    ? 'Date scheduled'
+                                    : 'Date already scheduled'}
+                                </strong>
                               </Toast.Header>
                               <Toast.Body>
-                                {dateRequested === 'success' ?
-                                  <p>The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!</p> :
-                                  <p><b>{apiDate}</b> is non-unique! Choose a different date.</p>}
-                                <Button href='/schedule'>Go to schedule <i className='bi bi-caret-right-fill'></i></Button>
+                                {dateRequested === 'success' ? (
+                                  <p>
+                                    The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!
+                                  </p>
+                                ) : (
+                                  <p>
+                                    <b>{apiDate}</b> is non-unique! Choose a different date.
+                                  </p>
+                                )}
+                                <Button href="/schedule">
+                                  Go to schedule <i className="bi bi-caret-right-fill"></i>
+                                </Button>
                               </Toast.Body>
                             </Toast>
                           </ToastContainer>
@@ -287,28 +293,22 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
             })}
           </div>
           <button
-            className='carousel-control-prev'
-            type='button'
-            data-bs-target='#weatherCarousel'
-            data-bs-slide='prev'
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target="#weatherCarousel"
+            data-bs-slide="prev"
           >
-            <span
-              className='carousel-control-prev-icon'
-              aria-hidden='true'
-            ></span>
-            <span className='visually-hidden'>Previous</span>
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
           </button>
           <button
-            className='carousel-control-next'
-            type='button'
-            data-bs-target='#weatherCarousel'
-            data-bs-slide='next'
+            className="carousel-control-next"
+            type="button"
+            data-bs-target="#weatherCarousel"
+            data-bs-slide="next"
           >
-            <span
-              className='carousel-control-next-icon'
-              aria-hidden='true'
-            ></span>
-            <span className='visually-hidden'>Next</span>
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
           </button>
         </div>
       </div>
@@ -316,8 +316,8 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
       <br />
 
       {/* Scroll menu for the weekdays */}
-      <div className='scrollmenu'>
-        <div className='btn-group' role='group' aria-label='Basic example'>
+      <div className="scrollmenu">
+        <div className="btn-group" role="group" aria-label="Basic example">
           {weatherData.map((value, index) => {
             const d = new Date(value.date + 'T00:00:00.000-05:00');
             let day = weekday[d.getDay()];
@@ -334,13 +334,16 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
                 overlay={<Tooltip>{judge[value.judgement]}</Tooltip>}
               >
                 <Button
-                  type='button'
-                  className='btn btn-secondary'
-                  data-bs-target='#weatherCarousel'
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-target="#weatherCarousel"
                   data-bs-slide-to={index}
                   variant={`${value.judgement !== 'kms' ? 'success' : ''}`}
                 >
-                  <b>{index === 0 ? 'Today' : day} {scheduled ? <i className="bi bi-calendar-check"></i> : ''}</b>
+                  <b>
+                    {index === 0 ? 'Today' : day}{' '}
+                    {scheduled ? <i className="bi bi-calendar-check"></i> : ''}
+                  </b>
                   <h1>{value.temperature}°F</h1>
                 </Button>
               </OverlayTrigger>
