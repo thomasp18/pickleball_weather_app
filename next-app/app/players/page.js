@@ -23,9 +23,10 @@ export default function Players() {
   } = useRequest('GET', '/api/matches');
   const [playerName, setPlayerName] = useState('');
   const [playerRequested, setPlayerRequested] = useState(null);
+  const [disableAddPlayer, setDisableAddPlayer] = useState(false);
   const playerStats = !playersLoading && !matchesLoading && calculatePlayerStats(players, matches);
 
-  async function AddPlayer(playerName) {
+  async function addPlayer(playerName) {
     if (playerName === '') {
       return;
     }
@@ -45,6 +46,8 @@ export default function Players() {
       return;
     }
 
+    setDisableAddPlayer(true);
+
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -60,6 +63,7 @@ export default function Players() {
 
       refetch();
       setPlayerRequested('success');
+      setDisableAddPlayer(false);
     } catch (error) {
       console.error(error.message);
     }
@@ -96,9 +100,9 @@ export default function Players() {
             value={playerName}
           />
           <button
-            className="btn btn-outline-secondary"
+            className={`btn btn-outline-secondary ${disableAddPlayer && 'disabled'}`}
             type="button"
-            onClick={() => AddPlayer(playerName)}
+            onClick={() => addPlayer(playerName)}
           >
             Add player
           </button>
