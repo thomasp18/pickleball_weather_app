@@ -88,7 +88,7 @@ function ScheduleData({ schedule, matches, unschedule }) {
                                     </tbody>
                                 </table>
                                 <div className='text-end'>
-                                    <Button variant='danger' size="lg" onClick={unscheduleID}>🗑️</Button>
+                                    <Button variant='danger' size="lg" onClick={unscheduleID}><i className='bi bi-trash-fill'></i></Button>
                                 </div>
                             </Accordion.Body>
                         </Accordion.Item>

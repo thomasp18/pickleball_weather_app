@@ -24,12 +24,7 @@ export default function Home() {
   const [show, setShow] = useState(false);
   const [dateRequested, setDateRequested] = useState(null);
 
-  async function addDate(scheduleDate) {
-    if (scheduleDate === '') {
-      return;
-    }
-
-    const url = '/api/schedule';
+  function scheduleDupe(date) {
     let duplicate = false;
 
     schedule.forEach((schedule) => {
@@ -38,12 +33,22 @@ export default function Home() {
         sdate.slice(0, 10) + 'T00:00:00.000-05:00'
       ).toDateString();
 
-      if (formatSdate === scheduleDate.toDateString()) {
+      if (formatSdate === date.toDateString()) {
         duplicate = true;
       }
     });
 
-    if (duplicate) {
+    return duplicate;
+  }
+
+  async function addDate(scheduleDate) {
+    const url = '/api/schedule';
+
+    if (scheduleDate === '') {
+      return;
+    }
+
+    if (scheduleDupe(scheduleDate)) {
       setDateRequested('error');
       return;
     }
@@ -83,7 +88,7 @@ export default function Home() {
       </h1>
       <br />
       <div className='text-center'>
-        <WeatherData weatherData={weather} addDate={addDate} show={show} setShow={setShow} dateRequested={dateRequested} />
+        <WeatherData weatherData={weather} addDate={addDate} show={show} setShow={setShow} dateRequested={dateRequested} dupe={scheduleDupe} />
       </div>
       <br />
       <div className='text-center mt-2 mb-4'>
@@ -96,7 +101,7 @@ export default function Home() {
 }
 
 // Displays the weather data in a more readable state
-function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
+function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe }) {
   const weekday = {
     1: 'Monday',
     2: 'Tuesday',
@@ -269,7 +274,7 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
                                 {dateRequested === 'success' ?
                                   <p>The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!</p> :
                                   <p><b>{apiDate}</b> is non-unique! Choose a different date.</p>}
-                                <Button href='/schedule'>Go to schedule ➡️</Button>
+                                <Button href='/schedule'>Go to schedule <i className='bi bi-caret-right-fill'></i></Button>
                               </Toast.Body>
                             </Toast>
                           </ToastContainer>
@@ -320,6 +325,8 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
               kms: 'this is not peak',
               'this is peak piko weather': 'this is peak',
             };
+            const scheduled = dupe(d);
+            console.log('scheduled', scheduled);
 
             return (
               <OverlayTrigger
@@ -331,9 +338,9 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
                   className='btn btn-secondary'
                   data-bs-target='#weatherCarousel'
                   data-bs-slide-to={index}
-                  variant={`${value.judgement === 'kms' ? '' : 'success'}`}
+                  variant={`${value.judgement !== 'kms' ? 'success' : ''}`}
                 >
-                  <b>{index === 0 ? 'Today' : day}</b>
+                  <b>{index === 0 ? 'Today' : day} {scheduled ? <i className="bi bi-calendar-check"></i> : ''}</b>
                   <h1>{value.temperature}°F</h1>
                 </Button>
               </OverlayTrigger>
@@ -345,4 +352,5 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
   );
 }
 
-// (icons) https://icons.qweather.com/en/
+// (icons) https://icons.getbootstrap.com/
+// (weather icons) https://icons.qweather.com/en/
