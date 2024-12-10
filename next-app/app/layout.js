@@ -14,8 +14,14 @@ export default function RootLayout({ children }) {
       <head>
         <meta charSet="utf-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
-        <link href="https://cdn.jsdelivr.net/npm/qweather-icons@1.3.2/font/qweather-icons.css" rel="stylesheet"></link>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></link>
+        <link
+          href="https://cdn.jsdelivr.net/npm/qweather-icons@1.3.2/font/qweather-icons.css"
+          rel="stylesheet"
+        ></link>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        ></link>
         <title>Pickleball Weather App</title>
       </head>
       <body>

@@ -1,18 +1,20 @@
-import axios from 'axios';
+import axios, { Method } from 'axios';
 import { useEffect, useState } from 'react';
 
 /**
  * Fetches data from any URL
  */
-const useRequest = (method, url) => {
+const useRequest = (method: Method, url: string) => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
-    axios.request({
-      url, method
-    })
+    axios
+      .request({
+        url,
+        method,
+      })
       .then((res) => {
         setResponse(res.data);
       })
