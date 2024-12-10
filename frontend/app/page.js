@@ -266,7 +266,10 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested }) {
                                 <strong className="me-auto">{dateRequested === 'success' ? 'Date scheduled' : 'Date already scheduled'}</strong>
                               </Toast.Header>
                               <Toast.Body>
-                                {dateRequested === 'success' ? <p>The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!</p> : <p><b>{apiDate}</b> is non-unique! Choose a different date.</p>}
+                                {dateRequested === 'success' ?
+                                  <p>The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!</p> :
+                                  <p><b>{apiDate}</b> is non-unique! Choose a different date.</p>}
+                                <Button href='/schedule'>Go to schedule ➡️</Button>
                               </Toast.Body>
                             </Toast>
                           </ToastContainer>
