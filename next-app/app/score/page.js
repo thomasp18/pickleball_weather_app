@@ -229,6 +229,7 @@ function ScoreButton({
     <>
       <button
         className={`mb-2 btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`}
+        style={{ fontSize: '18px' }}
         onClick={() => {
           if (inPossession) {
             setScore(score + 1);
