@@ -21,7 +21,7 @@ export default function Home() {
     loading: scheduleLoading,
     refetch,
   } = useRequest('GET', '/api/schedule');
-  const [show, setShow] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const [dateRequested, setDateRequested] = useState(null);
 
   function scheduleDupe(date) {
@@ -87,8 +87,8 @@ export default function Home() {
         <WeatherData
           weatherData={weather}
           addDate={addDate}
-          show={show}
-          setShow={setShow}
+          showToast={showToast}
+          setShowToast={setShowToast}
           dateRequested={dateRequested}
           dupe={scheduleDupe}
         />
@@ -104,7 +104,7 @@ export default function Home() {
 }
 
 // Displays the weather data in a more readable state
-function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe }) {
+function WeatherData({ weatherData, addDate, showToast, setShowToast, dateRequested, dupe }) {
   const weekday = {
     1: 'Monday',
     2: 'Tuesday',
@@ -204,7 +204,7 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
               const weatherIcon = icon[value.weathercode];
               const schedDate = () => {
                 addDate(d);
-                setShow(true);
+                setShowToast(true);
               };
 
               return (
@@ -260,7 +260,12 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
                             Schedule Date
                           </Button>
                           <ToastContainer className="position-fixed p-3" position="bottom-end">
-                            <Toast onClose={() => setShow(false)} show={show} delay={6000} autohide>
+                            <Toast
+                              onClose={() => setShowToast(false)}
+                              show={showToast}
+                              delay={6000}
+                              autohide
+                            >
                               <Toast.Header>
                                 <strong className="me-auto">
                                   {dateRequested === 'success'
