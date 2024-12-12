@@ -79,10 +79,9 @@ function ScheduleData({ schedule, matches, unschedule }) {
                 <table className="table text-center">
                   <thead>
                     <tr>
-                      <th>Match</th>
+                      <th>#</th>
                       <th className="text-primary">Team A</th>
-                      <th className="text-primary">Score</th>
-                      <th className="text-danger">Score</th>
+                      <th>Score</th>
                       <th className="text-danger">Team B</th>
                     </tr>
                   </thead>
@@ -92,10 +91,11 @@ function ScheduleData({ schedule, matches, unschedule }) {
                       if (reformat.mdate === scheddate) {
                         return (
                           <tr key={match_id}>
-                            <td>Game {match_id}</td>
+                            <td>{match_id}</td>
                             <td>{reformat.teamA.join(', ')}</td>
-                            <td>{reformat.ascore}</td>
-                            <td>{reformat.bscore}</td>
+                            <td>
+                              {reformat.ascore} &ndash; {reformat.bscore}
+                            </td>
                             <td>{reformat.teamB.join(', ')}</td>
                           </tr>
                         );
@@ -104,7 +104,7 @@ function ScheduleData({ schedule, matches, unschedule }) {
                   </tbody>
                 </table>
                 <div className="text-end">
-                  <Button variant="danger" size="lg" onClick={unscheduleID}>
+                  <Button variant="danger" onClick={unscheduleID}>
                     <i className="bi bi-trash-fill"></i>
                   </Button>
                 </div>

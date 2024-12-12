@@ -44,22 +44,26 @@ function MatchData({ matches }) {
             <th>Match</th>
             <th>Date</th>
             <th className="text-primary">Team A</th>
-            <th className="text-primary">Score</th>
-            <th className="text-danger">Score</th>
+            <th className="text">Score</th>
+            {/* <th className="text-danger">Score</th> */}
             <th className="text-danger">Team B</th>
           </tr>
         </thead>
         <tbody>
-          {reformatted.map((value) => {
-            if (value.match_id) {
+          {reformatted.map((reformatted) => {
+            const { match_id } = reformatted;
+
+            if (match_id) {
               return (
-                <tr key={value.match_id}>
-                  <td>Game {value.match_id}</td>
-                  <td>{value.mdate}</td>
-                  <td>{value.teamA.join(', ')}</td>
-                  <td>{value.ascore}</td>
-                  <td>{value.bscore}</td>
-                  <td>{value.teamB.join(', ')}</td>
+                <tr key={match_id}>
+                  <td>Game {match_id}</td>
+                  <td>{reformatted.mdate}</td>
+                  <td>{reformatted.teamA.join(', ')}</td>
+                  <td>
+                    {reformatted.ascore} &ndash; {reformatted.bscore}
+                  </td>
+                  {/* <td>{value.bscore}</td> */}
+                  <td>{reformatted.teamB.join(', ')}</td>
                 </tr>
               );
             }
