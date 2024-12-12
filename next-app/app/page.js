@@ -224,25 +224,25 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
                         </p>
                         <ListGroup variant="flush">
                           <ListGroup.Item className="card-text">
-                            <div className="float-start">Humidity: </div>
+                            <div className="float-start">Humidity </div>
                             <div className="float-end">
                               <b className="text-end">{value.humidity}%</b>
                             </div>
                           </ListGroup.Item>
                           <ListGroup.Item className="card-text">
-                            <div className="float-start">Wind:</div>
+                            <div className="float-start">Wind </div>
                             <div className="float-end">
                               <b>{value.wind} mph</b>
                             </div>
                           </ListGroup.Item>
                           <ListGroup.Item className="card-text">
-                            <div className="float-start">Rain Chance: </div>
+                            <div className="float-start">Rain Chance </div>
                             <div className="float-end">
                               <b>{value.precipitation}%</b>
                             </div>
                           </ListGroup.Item>
                           <ListGroup.Item className="card-text">
-                            <div className="float-start">Forecast: </div>
+                            <div className="float-start">Forecast </div>
                             <div className="float-end">
                               <b>{value.weathercode}</b>
                             </div>
@@ -274,9 +274,7 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
                                     The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!
                                   </p>
                                 ) : (
-                                  <p>
-                                    <b>{apiDate}</b> is non-unique! Choose a different date.
-                                  </p>
+                                  <p>This date is already scheduled.</p>
                                 )}
                                 <Button href="/schedule">
                                   Go to schedule <i className="bi bi-caret-right-fill"></i>
@@ -316,7 +314,10 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
       <br />
 
       {/* Scroll menu for the weekdays */}
-      <div className="scrollmenu">
+      <div
+        className="scrollmenu"
+        style={{ marginLeft: '12px', marginRight: '12px', borderRadius: '6px' }}
+      >
         <div className="btn-group" role="group" aria-label="Basic example">
           {weatherData.map((value, index) => {
             const d = new Date(value.date + 'T00:00:00.000-05:00');
@@ -326,7 +327,6 @@ function WeatherData({ weatherData, addDate, show, setShow, dateRequested, dupe 
               'this is peak piko weather': 'this is peak',
             };
             const scheduled = dupe(d);
-            console.log('scheduled', scheduled);
 
             return (
               <OverlayTrigger

@@ -16,7 +16,7 @@ function Navibar() {
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/">
-          <Image alt="" src="./favicon.ico" style={{ borderRadius: 7 }}></Image>
+          <Image alt="" src="/logo.png" style={{ borderRadius: 7 }} width="48" height="48"></Image>
         </Navbar.Brand>
         <h1 className="d-lg-none display-3">{page[usePathname()]}</h1>
         <NavbarToggle aria-controls="basic-navbar-nav" />
