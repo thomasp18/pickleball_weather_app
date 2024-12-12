@@ -261,6 +261,7 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
                           </Button>
                           <ToastContainer className="position-fixed p-3" position="bottom-end">
                             <Toast
+                              style={{ backgroundColor: 'rgba(33, 37, 41, 1)' }}
                               onClose={() => setShowToast(false)}
                               show={showToast}
                               delay={6000}
