@@ -1,6 +1,7 @@
 import BootstrapClient from './components/BootstrapClient.js';
 import Footer from './components/footer/footer.js';
 import Navibar from './components/navbar/navbar.js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './globals.css';
 
 export const metadata = {
