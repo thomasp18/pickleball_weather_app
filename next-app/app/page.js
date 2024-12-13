@@ -1,21 +1,81 @@
 'use client';
 import { useState } from 'react';
-import { OverlayTrigger } from 'react-bootstrap';
+import { ListGroup, OverlayTrigger, Toast, ToastContainer } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Error from './components/loading-and-error/error';
 import Loading from './components/loading-and-error/loading';
+import './mobile.css';
 import useRequest from './utils/useRequest';
 
 // Main component
 export default function Home() {
-  const { response, error, loading } = useRequest('GET', '/api/weather');
+  const {
+    response: weather,
+    error: weatherErr,
+    loading: weatherLoading,
+  } = useRequest('GET', '/api/weather');
+  const {
+    response: schedule,
+    error: scheduleErr,
+    loading: scheduleLoading,
+    refetch,
+  } = useRequest('GET', '/api/schedule');
+  const [showToast, setShowToast] = useState(false);
+  const [dateRequested, setDateRequested] = useState(null);
 
-  if (loading) {
+  function scheduleDupe(date) {
+    let duplicate = false;
+
+    schedule.forEach((schedule) => {
+      const { sdate } = schedule;
+      const formatSdate = new Date(sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
+
+      if (formatSdate === date.toDateString()) {
+        duplicate = true;
+      }
+    });
+
+    return duplicate;
+  }
+
+  async function addDate(scheduleDate) {
+    const url = '/api/schedule';
+
+    if (scheduleDate === '') {
+      return;
+    }
+
+    if (scheduleDupe(scheduleDate)) {
+      setDateRequested('error');
+      return;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ sdate: scheduleDate }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      refetch();
+      setDateRequested('success');
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  if (weatherLoading || scheduleLoading) {
     return <Loading />;
   }
 
-  if (error) {
+  if (weatherErr || scheduleErr) {
     return <Error />;
   }
 
@@ -24,7 +84,14 @@ export default function Home() {
       <h1 className="display-1 text-center p-auto m-auto pt-2">PikoWeatherer</h1>
       <br />
       <div className="text-center">
-        <WeatherData apiData={response} />
+        <WeatherData
+          weatherData={weather}
+          addDate={addDate}
+          showToast={showToast}
+          setShowToast={setShowToast}
+          dateRequested={dateRequested}
+          dupe={scheduleDupe}
+        />
       </div>
       <br />
       <div className="text-center mt-2 mb-4">
@@ -37,24 +104,17 @@ export default function Home() {
 }
 
 // Displays the weather data in a more readable state
-function WeatherData({ apiData }) {
-  // Seperate the API data from today and the rest of the week
-  const todayData = apiData[0];
-  const future = apiData.slice(1, 7);
-  const [marked, setMarked] = useState(false);
-  const markDay = marked ? 'marked' : '';
-
-  let weekday = {
-    0: 'Monday',
-    1: 'Tuesday',
-    2: 'Wednesday',
-    3: 'Thursday',
-    4: 'Friday',
-    5: 'Saturday',
-    6: 'Sunday',
+function WeatherData({ weatherData, addDate, showToast, setShowToast, dateRequested, dupe }) {
+  const weekday = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    0: 'Sunday',
   };
-
-  let icon = {
+  const icon = {
     'Clear sky': 'qi-100',
     'Mainly clear': 'qi-102',
     'Partly cloudy': 'qi-103',
@@ -84,7 +144,6 @@ function WeatherData({ apiData }) {
     'Slight hail thunderstorm': 'qi-304',
     'Heavy hail thunderstorm': 'qi-304-fill',
   };
-  let todayWIcon = icon[todayData.weathercode];
 
   return (
     <>
@@ -138,41 +197,98 @@ function WeatherData({ apiData }) {
             ></button>
           </div>
           <div className="carousel-inner">
-            {apiData.map((value, index) => {
-              let apiDate = value.date;
-              const d = new Date(apiDate);
-              let day = weekday[d.getDay()];
-              let weatherIcon = icon[value.weathercode];
+            {weatherData.map((value, index) => {
+              const apiDate = value.date;
+              const d = new Date(apiDate + 'T00:00:00.000-05:00');
+              const day = weekday[d.getDay()];
+              const weatherIcon = icon[value.weathercode];
+              const schedDate = () => {
+                addDate(d);
+                setShowToast(true);
+              };
 
               return (
                 <div key={apiDate} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                  <div className={`card text-center ${markDay}`}>
-                    <i className={weatherIcon} style={{ fontSize: '150px' }}></i>
+                  <div className="card text-center">
+                    <i className={`mb-0 ${weatherIcon}`} style={{ fontSize: '150px' }}></i>
                     <div className="card-body text-center">
-                      <div style={{ display: 'inline-block', textAlign: 'left' }}>
-                        <h5 className="mb-0">
+                      <div className="d-inline-block weather">
+                        <h5 className="text-center fs-3 mt-0 mb-0">
                           <b>{index === 0 ? 'Today' : day}</b>
                         </h5>
-                        <p className="card-title mt-0">
+                        <p className="card-title text-center mt-0 mb-0">
                           <small className="text-body-secondary">{apiDate}</small>
                         </p>
-                        <li className="card-text">Temperature: {value.temperature}°F</li>
-                        <li className="card-text">Humidity: {value.humidity}%</li>
-                        <li className="card-text">Wind: {value.wind} mph</li>
-                        <li className="card-text">Rain Chance: {value.precipitation}%</li>
-                        <li className="card-text">Weather Condition: {value.weathercode}</li>
+                        <p className="card-text text-center fs-3 mt-0 mb-0">
+                          <b>{value.temperature}°F</b>
+                        </p>
+                        <ListGroup variant="flush">
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Humidity </div>
+                            <div className="float-end">
+                              <b className="text-end">{value.humidity}%</b>
+                            </div>
+                          </ListGroup.Item>
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Wind </div>
+                            <div className="float-end">
+                              <b>{value.wind} mph</b>
+                            </div>
+                          </ListGroup.Item>
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Rain Chance </div>
+                            <div className="float-end">
+                              <b>{value.precipitation}%</b>
+                            </div>
+                          </ListGroup.Item>
+                          <ListGroup.Item className="card-text">
+                            <div className="float-start">Forecast </div>
+                            <div className="float-end">
+                              <b>{value.weathercode}</b>
+                            </div>
+                          </ListGroup.Item>
+                        </ListGroup>
                       </div>
                     </div>
                     <div className="card-footer text-center">
                       <div className="row justify-content-center">
-                        <div className="col-sm">
-                          <p className="card-text pb-5">
+                        <div className="col-sm pb-5">
+                          <p className="card-text">
                             Judgement: <b>{value.judgement}</b>
                           </p>
+                          <Button type="button" onClick={schedDate}>
+                            Schedule Date
+                          </Button>
+                          <ToastContainer className="position-fixed p-3" position="bottom-end">
+                            <Toast
+                              style={{ backgroundColor: 'rgba(33, 37, 41, 1)' }}
+                              onClose={() => setShowToast(false)}
+                              show={showToast}
+                              delay={6000}
+                              autohide
+                            >
+                              <Toast.Header>
+                                <strong className="me-auto">
+                                  {dateRequested === 'success'
+                                    ? 'Date scheduled'
+                                    : 'Date already scheduled'}
+                                </strong>
+                              </Toast.Header>
+                              <Toast.Body>
+                                {dateRequested === 'success' ? (
+                                  <p>
+                                    The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!
+                                  </p>
+                                ) : (
+                                  <p>This date is already scheduled.</p>
+                                )}
+                                <Button href="/schedule">
+                                  Go to schedule <i className="bi bi-caret-right-fill"></i>
+                                </Button>
+                              </Toast.Body>
+                            </Toast>
+                          </ToastContainer>
                         </div>
-                        {/* <div className='col-sm'>
-                          <button className="btn btn-secondary" onClick={() => setMarked(!marked)}>mark</button>
-                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -204,15 +320,19 @@ function WeatherData({ apiData }) {
       <br />
 
       {/* Scroll menu for the weekdays */}
-      <div className="scrollmenu">
+      <div
+        className="scrollmenu"
+        style={{ marginLeft: '12px', marginRight: '12px', borderRadius: '6px' }}
+      >
         <div className="btn-group" role="group" aria-label="Basic example">
-          {apiData.map((value, index) => {
-            const d = new Date(value.date);
+          {weatherData.map((value, index) => {
+            const d = new Date(value.date + 'T00:00:00.000-05:00');
             let day = weekday[d.getDay()];
             const judge = {
               kms: 'this is not peak',
               'this is peak piko weather': 'this is peak',
             };
+            const scheduled = dupe(d);
 
             return (
               <OverlayTrigger
@@ -224,9 +344,12 @@ function WeatherData({ apiData }) {
                   className="btn btn-secondary"
                   data-bs-target="#weatherCarousel"
                   data-bs-slide-to={index}
-                  variant={`${value.judgement === 'kms' ? '' : 'success'}`}
+                  variant={`${value.judgement !== 'kms' ? 'success' : ''}`}
                 >
-                  <b>{index === 0 ? 'Today' : day}</b>
+                  <b>
+                    {index === 0 ? 'Today' : day}{' '}
+                    {scheduled ? <i className="bi bi-calendar-check"></i> : ''}
+                  </b>
                   <h1>{value.temperature}°F</h1>
                 </Button>
               </OverlayTrigger>
@@ -238,4 +361,5 @@ function WeatherData({ apiData }) {
   );
 }
 
-// (icons) https://icons.qweather.com/en/
+// (icons) https://icons.getbootstrap.com/
+// (weather icons) https://icons.qweather.com/en/
