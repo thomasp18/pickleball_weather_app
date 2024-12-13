@@ -99,40 +99,6 @@ export default function Score() {
           </p>
         </div>
 
-        {/* Winner card */}
-        {winner ? (
-          <div className="card w-75">
-            <div className="card-header">Winner</div>
-            <div className="card-body d-flex flex-column align-items-center">
-              <p className="card-text">
-                Team <b>{winner}</b> won! {randomEmoji()}
-              </p>
-              <div>
-                {aPlayers.length != 0 && bPlayers.length != 0 && (
-                  <button
-                    className="btn btn-secondary btn-sm mx-2"
-                    onClick={() => {
-                      resetGame(true);
-                    }}
-                  >
-                    Rematch
-                  </button>
-                )}
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => {
-                    resetGame();
-                  }}
-                >
-                  Reset game
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div style={{ minHeight: '145px' }}></div>
-        )}
-
         {/* Score + buttons */}
         <div className="container text-center">
           <div className="row gx-0">
