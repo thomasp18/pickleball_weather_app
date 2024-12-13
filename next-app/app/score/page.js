@@ -80,9 +80,9 @@ export default function Score() {
   return (
     <div className="container-sm d-flex flex-column">
       <h1 className="display-3">Scorekeeper</h1>
-      <div className="d-flex flex-column page justify-content-evenly align-items-center">
+      <div className="d-flex flex-column page justify-content-between align-items-center">
         {/* Game info */}
-        <div>
+        <div className="pt-3">
           <h3>
             Playing {gameType} to{' '}
             {!playToScore || playToScore <= 0 ? setPlayToScore(11) : playToScore} points
@@ -99,11 +99,26 @@ export default function Score() {
           </p>
         </div>
 
-        {/* Score + buttons */}
+        {/* Score */}
         <div className="container text-center">
           <div className="row gx-0">
             <div className="col">
-              <p className="display-3 text-center">{aScore}</p>
+              <p className="display-3 text-center" style={{ fontSize: '80px' }}>
+                {aScore}
+              </p>
+            </div>
+            <div className="col">
+              <p className="display-1 text-center" style={{ fontSize: '80px' }}>
+                {bScore}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="container text-center">
+          <div className="row gx-0">
+            <div className="col">
               <ScoreButton
                 team={'A'}
                 inPossession={possession === 'A'}
@@ -127,7 +142,6 @@ export default function Score() {
               )}
             </div>
             <div className="col">
-              <p className="display-3 text-center">{bScore}</p>
               <ScoreButton
                 team={'B'}
                 inPossession={possession === 'B'}
@@ -156,8 +170,12 @@ export default function Score() {
 
       {/* Settings */}
       <div style={{ position: 'absolute', bottom: '70px', right: '20px' }}>
-        <button type="button" className="btn btn-secondary" onClick={() => setShowSettings(true)}>
-          Settings
+        <button
+          type="button"
+          className="btn btn-lg btn-secondary"
+          onClick={() => setShowSettings(true)}
+        >
+          <i className="bi bi-gear-fill"></i>
         </button>
       </div>
 
@@ -175,7 +193,14 @@ export default function Score() {
         bPlayers={bPlayers}
         setBPlayers={setBPlayers}
       />
-      <WinnerModal winner={winner} resetGame={resetGame} aPlayers={aPlayers} bPlayers={bPlayers} />
+      <WinnerModal
+        winner={winner}
+        resetGame={resetGame}
+        aPlayers={aPlayers}
+        bPlayers={bPlayers}
+        aScore={aScore}
+        bScore={bScore}
+      />
     </div>
   );
 }
@@ -195,7 +220,7 @@ function ScoreButton({
     <>
       <button
         className={`mb-2 btn btn-lg ${team === 'A' ? 'btn-primary' : 'btn-danger'} ${disabled && 'disabled'}`}
-        style={{ fontSize: '18px' }}
+        style={{ fontSize: '18px', paddingTop: '54px', paddingBottom: '54px' }}
         onClick={() => {
           if (inPossession) {
             setScore(score + 1);
@@ -348,7 +373,7 @@ function SettingsModal({
   );
 }
 
-function WinnerModal({ winner, resetGame, aPlayers, bPlayers }) {
+function WinnerModal({ winner, resetGame, aPlayers, bPlayers, aScore, bScore }) {
   const [overrideShow, setOverrideShow] = useState(true);
   const resetGameRetain = () => {
     resetGame(true);
@@ -371,7 +396,8 @@ function WinnerModal({ winner, resetGame, aPlayers, bPlayers }) {
           <Modal.Title>Winner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <b>Team {winner}</b> won! {randomEmoji()}
+          <b className={winner === 'A' ? 'text-primary' : 'text-danger'}>Team {winner}</b> won{' '}
+          {winner === 'A' ? `${aScore} – ${bScore}` : `${bScore} – ${aScore}`}! {randomEmoji()}
         </Modal.Body>
         <Modal.Footer>
           {aPlayers.length != 0 && bPlayers.length != 0 && (
