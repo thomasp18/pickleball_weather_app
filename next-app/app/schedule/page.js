@@ -71,12 +71,11 @@ function ScheduleData({ schedule, matches, unschedule }) {
           const scheddate = new Date(
             schedule.sdate.slice(0, 10) + 'T00:00:00.000-05:00',
           ).toDateString();
-
-          return (
-            <Accordion.Item key={id} eventKey={id - 1}>
-              <Accordion.Header>{scheddate}</Accordion.Header>
-              <Accordion.Body>
-                <table className="table text-center">
+          const matchesTable = reformat.map((reformat) => {
+            const { match_id } = reformat;
+            if (reformat.mdate === scheddate) {
+              return (
+                <table key={match_id} className="table text-center">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -86,23 +85,31 @@ function ScheduleData({ schedule, matches, unschedule }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {reformat.map((reformat) => {
-                      const { match_id } = reformat;
-                      if (reformat.mdate === scheddate) {
-                        return (
-                          <tr key={match_id}>
-                            <td>{match_id}</td>
-                            <td>{reformat.teamA.join(', ')}</td>
-                            <td>
-                              {reformat.ascore} &ndash; {reformat.bscore}
-                            </td>
-                            <td>{reformat.teamB.join(', ')}</td>
-                          </tr>
-                        );
-                      }
-                    })}
+                    <tr>
+                      <td>{match_id}</td>
+                      <td>{reformat.teamA.join(', ')}</td>
+                      <td>
+                        {reformat.ascore} &ndash; {reformat.bscore}
+                      </td>
+                      <td>{reformat.teamB.join(', ')}</td>
+                    </tr>
                   </tbody>
                 </table>
+              );
+            }
+          });
+          let showMatchesTable = false;
+          for (let i = 0; i < a.length; i++) {
+            if (matchesTable[i] !== undefined) {
+              showMatchesTable = true;
+            }
+          }
+
+          return (
+            <Accordion.Item key={id} eventKey={id - 1}>
+              <Accordion.Header>{scheddate}</Accordion.Header>
+              <Accordion.Body>
+                <div>{showMatchesTable ? matchesTable : 'No match data found.'}</div>
                 <div className="text-end">
                   <Button variant="danger" onClick={unscheduleID}>
                     <i className="bi bi-trash-fill"></i>
