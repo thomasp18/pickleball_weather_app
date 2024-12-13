@@ -82,9 +82,9 @@ export default function Players() {
       <h1 className="display-3">Players</h1>
 
       {/* Settings */}
-      <div>
+      <div className="my-3">
         <label htmlFor="playerName" className="form-label">
-          Settings
+          Add a new player?
         </label>
         <div className="input-group">
           <input
@@ -104,10 +104,9 @@ export default function Players() {
             type="button"
             onClick={() => addPlayer(playerName)}
           >
-            Add player
+            <i class="bi bi-person-plus-fill"></i>
           </button>
         </div>
-        <div className="form-text mb-2">Add a new player?</div>
       </div>
 
       {/* Table */}
