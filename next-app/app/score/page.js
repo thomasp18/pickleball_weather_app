@@ -367,7 +367,7 @@ function WinnerModal({ winner, resetGame, aPlayers, bPlayers }) {
         keyboard={false}
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Winner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
