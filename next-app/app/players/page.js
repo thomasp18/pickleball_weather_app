@@ -104,7 +104,7 @@ export default function Players() {
             type="button"
             onClick={() => addPlayer(playerName)}
           >
-            <i class="bi bi-person-plus-fill"></i>
+            <i className="bi bi-person-plus-fill"></i>
           </button>
         </div>
       </div>
