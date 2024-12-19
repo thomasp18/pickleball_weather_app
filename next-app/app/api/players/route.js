@@ -32,10 +32,10 @@ export async function POST(request) {
     );
   }
 
-  const query = await sql`
+  const playerNames = await sql`
     SELECT LOWER(pname) FROM players
     WHERE LOWER(pname) = ${pname.toLowerCase()}`;
-  if (query.length !== 0) {
+  if (playerNames.length !== 0) {
     return NextResponse.json({ error: `${pname} already exists` }, { status: 400 });
   }
 
