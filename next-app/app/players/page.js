@@ -45,8 +45,6 @@ export default function Players() {
     } else {
       setPlayerRequested('confirm');
     }
-
-    return;
   }
 
   async function addPlayer(playerName) {
