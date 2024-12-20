@@ -275,7 +275,6 @@ function PlayerModal({
               variant="secondary"
               onClick={() => {
                 setPlayerRequested(null);
-                setPlayerName('');
               }}
             >
               No
@@ -293,7 +292,6 @@ function PlayerModal({
           <Button
             onClick={() => {
               setPlayerRequested(null);
-              setPlayerName('');
             }}
           >
             Close
