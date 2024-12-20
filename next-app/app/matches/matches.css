@@ -1,0 +1,17 @@
+@media (width <=1250px) {
+  .tableHead {
+    width: 1%;
+  }
+  .scoreHeader {
+    width: 18%;
+  }
+  .fullElement {
+    display: none;
+  }
+}
+
+@media (width > 1250px) {
+  .condensedElement {
+    display: none;
+  }
+}

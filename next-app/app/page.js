@@ -71,6 +71,35 @@ export default function Home() {
     }
   }
 
+  async function undo(undoDate) {
+    const url = '/api/schedule';
+    let id = null;
+
+    schedule.forEach((dates) => {
+      if (dates.sdate.slice(0, 10) === undoDate.slice(0, 10)) {
+        id = dates.id;
+      }
+    });
+
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      refetch();
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   if (weatherLoading || scheduleLoading) {
     return <Loading />;
   }
@@ -81,7 +110,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className="display-1 text-center p-auto m-auto pt-2">PikoWeatherer</h1>
+      <h1 className="display-1 text-center p-auto m-auto pt-2 title">PikoWeatherer</h1>
       <br />
       <div className="text-center">
         <WeatherData
@@ -91,6 +120,7 @@ export default function Home() {
           setShowToast={setShowToast}
           dateRequested={dateRequested}
           dupe={scheduleDupe}
+          undoDate={undo}
         />
       </div>
       <br />
@@ -104,7 +134,15 @@ export default function Home() {
 }
 
 // Displays the weather data in a more readable state
-function WeatherData({ weatherData, addDate, showToast, setShowToast, dateRequested, dupe }) {
+function WeatherData({
+  weatherData,
+  addDate,
+  showToast,
+  setShowToast,
+  dateRequested,
+  dupe,
+  undoDate,
+}) {
   const weekday = {
     1: 'Monday',
     2: 'Tuesday',
@@ -150,52 +188,6 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
       {/* Weather data carousel */}
       <div className="container-sm">
         <div id="weatherCarousel" className="carousel slide" data-bs-ride="false">
-          <div className="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="0"
-              className="active"
-              aria-current="true"
-              aria-label="wd1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="1"
-              aria-label="wd2"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="2"
-              aria-label="wd3"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="3"
-              aria-label="wd4"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="4"
-              aria-label="wd5"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="5"
-              aria-label="wd6"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="6"
-              aria-label="wd7"
-            ></button>
-          </div>
           <div className="carousel-inner">
             {weatherData.map((value, index) => {
               const apiDate = value.date;
@@ -205,6 +197,10 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
               const schedDate = () => {
                 addDate(d);
                 setShowToast(true);
+              };
+              const undoSchedDate = () => {
+                undoDate(apiDate);
+                setShowToast(false);
               };
 
               return (
@@ -252,7 +248,7 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
                     </div>
                     <div className="card-footer text-center">
                       <div className="row justify-content-center">
-                        <div className="col-sm pb-5">
+                        <div className="col-sm pb-1">
                           <p className="card-text">
                             Judgement: <b>{value.judgement}</b>
                           </p>
@@ -264,8 +260,6 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
                               style={{ backgroundColor: 'rgba(33, 37, 41, 1)' }}
                               onClose={() => setShowToast(false)}
                               show={showToast}
-                              delay={6000}
-                              autohide
                             >
                               <Toast.Header>
                                 <strong className="me-auto">
@@ -274,17 +268,30 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
                                     : 'Date already scheduled'}
                                 </strong>
                               </Toast.Header>
-                              <Toast.Body>
+                              <Toast.Body style={{ whiteSpace: 'nowrap' }}>
                                 {dateRequested === 'success' ? (
-                                  <p>
-                                    The date &apos;<b>{apiDate}</b>&apos; was added to the schedule!
-                                  </p>
+                                  <div>
+                                    <p>
+                                      The date &apos;<b>{apiDate}</b>&apos; was added to the
+                                      schedule!
+                                    </p>
+                                    <div>
+                                      <Button className="mx-1" onClick={undoSchedDate}>
+                                        Undo
+                                      </Button>
+                                      <Button className="mx-1" href="/schedule">
+                                        Go to schedule <i className="bi bi-caret-right-fill"></i>
+                                      </Button>
+                                    </div>
+                                  </div>
                                 ) : (
-                                  <p>This date is already scheduled.</p>
+                                  <div>
+                                    <p>This date is already scheduled.</p>
+                                    <Button className="mx-1" href="/schedule">
+                                      Go to schedule <i className="bi bi-caret-right-fill"></i>
+                                    </Button>
+                                  </div>
                                 )}
-                                <Button href="/schedule">
-                                  Go to schedule <i className="bi bi-caret-right-fill"></i>
-                                </Button>
                               </Toast.Body>
                             </Toast>
                           </ToastContainer>
@@ -310,6 +317,7 @@ function WeatherData({ weatherData, addDate, showToast, setShowToast, dateReques
             type="button"
             data-bs-target="#weatherCarousel"
             data-bs-slide="next"
+            data-bs-theme="primary"
           >
             <span className="carousel-control-next-icon" aria-hidden="true"></span>
             <span className="visually-hidden">Next</span>

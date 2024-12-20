@@ -7,8 +7,7 @@ const sql = postgres('postgresql://piko:pikopw@localhost:5432/piko-db?ssl=false'
 });
 
 export async function GET() {
-  const matchesData =
-    await sql`
+  const matchesData = await sql`
     SELECT match_id, mdate, ascore, bscore, player_id, team, pname
     FROM matches m
     JOIN matches_players_rel mpr on m.id = mpr.match_id
@@ -51,7 +50,9 @@ function formatMatches(matchData) {
     // run this right before match cutover (on the last item in data for a match)
     if (i === matchData.length - 1 || matchData[i].match_id !== matchData[i + 1].match_id) {
       Object.assign(rest, players);
-      rest.mdate = new Date(rest.mdate.toISOString().slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
+      rest.mdate = new Date(
+        rest.mdate.toISOString().slice(0, 10) + 'T00:00:00.000-05:00',
+      ).toDateString();
       formatted.push(rest);
       players = { teamA: [], teamB: [] };
     }

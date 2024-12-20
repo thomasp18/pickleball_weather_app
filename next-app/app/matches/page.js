@@ -4,6 +4,7 @@ import Error from '@/components/loading-and-error/error';
 import Loading from '@/components/loading-and-error/loading';
 import useRequest from '@/utils/useRequest';
 import '../mobile.css';
+import './matches.css';
 
 // Main component
 export default function Main() {
@@ -41,28 +42,31 @@ function MatchData({ matches }) {
       <table className="table text-center">
         <thead>
           <tr>
-            <th>Match</th>
+            <th className="fullElement">Match</th>
+            <th className="condensedElement tableHead">#</th>
             <th>Date</th>
             <th className="text-primary">Team A</th>
-            <th className="text">Score</th>
-            {/* <th className="text-danger">Score</th> */}
+            <th className="scoreHeader">Score</th>
             <th className="text-danger">Team B</th>
           </tr>
         </thead>
         <tbody>
           {reformatted.map((reformatted) => {
             const { match_id } = reformatted;
+            let matchDate = new Date(reformatted.mdate);
+            matchDate =
+              matchDate.getFullYear() + '-' + matchDate.getMonth() + '-' + matchDate.getDate();
 
             if (match_id) {
               return (
                 <tr key={match_id}>
-                  <td>Game {match_id}</td>
-                  <td>{reformatted.mdate}</td>
+                  <td>{match_id}</td>
+                  <td className="fullElement">{reformatted.mdate}</td>
+                  <td className="condensedElement">{matchDate}</td>
                   <td>{reformatted.teamA.join(', ')}</td>
                   <td>
-                    {reformatted.ascore} &ndash; {reformatted.bscore}
+                    {reformatted.ascore}&ndash;{reformatted.bscore}
                   </td>
-                  {/* <td>{value.bscore}</td> */}
                   <td>{reformatted.teamB.join(', ')}</td>
                 </tr>
               );
