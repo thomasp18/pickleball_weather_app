@@ -25,7 +25,7 @@ export default function Home() {
       <div className="text-center">
         <WeatherData apiData={response} />
       </div>
-      <div className="text-center mt-2 mb-4">
+      <div className="text-center my-3">
         <a className="btn btn-primary" href="/score">
           Play Now!
         </a>
