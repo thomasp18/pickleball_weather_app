@@ -108,11 +108,30 @@ function WeatherData({ apiData }) {
                         <p className="card-title mt-0">
                           <small className="text-body-secondary">{apiDate}</small>
                         </p>
-                        <li className="card-text">Temperature: {value.temperature}°F</li>
-                        <li className="card-text">Humidity: {value.humidity}%</li>
-                        <li className="card-text">Wind: {value.wind} mph</li>
-                        <li className="card-text">Rain Chance: {value.precipitation}%</li>
-                        <li className="card-text">Weather Condition: {value.weathercode}</li>
+                        <table className="table">
+                          <tbody>
+                            <tr>
+                              <td>Temperature</td>
+                              <td className="text-end">{value.temperature}°F</td>
+                            </tr>
+                            <tr>
+                              <td>Humidity</td>
+                              <td className="text-end">{value.humidity}%</td>
+                            </tr>
+                            <tr>
+                              <td>Wind</td>
+                              <td className="text-end">{value.wind} mph</td>
+                            </tr>
+                            <tr>
+                              <td>Rain Chance</td>
+                              <td className="text-end">{value.precipitation}%</td>
+                            </tr>
+                            <tr>
+                              <td>Condition</td>
+                              <td className="text-end">{value.weathercode}</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                     <div className="card-footer text-center">
