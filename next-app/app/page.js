@@ -137,7 +137,7 @@ function WeatherData({ apiData }) {
             data-bs-target="#weatherCarousel"
             data-bs-slide="prev"
           >
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="carousel-control-prev-icon"></span>
             <span className="visually-hidden">Previous</span>
           </button>
           <button
@@ -146,7 +146,7 @@ function WeatherData({ apiData }) {
             data-bs-target="#weatherCarousel"
             data-bs-slide="next"
           >
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="carousel-control-next-icon"></span>
             <span className="visually-hidden">Next</span>
           </button>
         </div>
@@ -156,7 +156,7 @@ function WeatherData({ apiData }) {
 
       {/* Scroll menu for the weekdays */}
       <div className="scrollmenu">
-        <div className="btn-group" role="group" aria-label="Basic example">
+        <div className="btn-group" role="group">
           {apiData.map((value, index) => {
             const d = new Date(value.date);
             let day = weekday[d.getDay()];
