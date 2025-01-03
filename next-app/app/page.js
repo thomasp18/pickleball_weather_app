@@ -91,52 +91,6 @@ function WeatherData({ apiData }) {
       {/* Weather data carousel */}
       <div className="container-sm">
         <div id="weatherCarousel" className="carousel slide" data-bs-ride="false">
-          <div className="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="0"
-              className="active"
-              aria-current="true"
-              aria-label="wd1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="1"
-              aria-label="wd2"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="2"
-              aria-label="wd3"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="3"
-              aria-label="wd4"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="4"
-              aria-label="wd5"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="5"
-              aria-label="wd6"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#weatherCarousel"
-              data-bs-slide-to="6"
-              aria-label="wd7"
-            ></button>
-          </div>
           <div className="carousel-inner">
             {apiData.map((value, index) => {
               let apiDate = value.date;
@@ -166,7 +120,7 @@ function WeatherData({ apiData }) {
                     <div className="card-footer text-center">
                       <div className="row justify-content-center">
                         <div className="col-sm">
-                          <p className="card-text pb-5">
+                          <p className="card-text">
                             Judgement: <b>{value.judgement}</b>
                           </p>
                         </div>
