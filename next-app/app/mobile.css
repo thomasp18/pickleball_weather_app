@@ -1,4 +1,4 @@
-@media (width <=1250px) {
+@media (width <= 991.5px) {
     .weather {
         width: 85%;
     }
@@ -8,7 +8,7 @@
     }
 }
 
-@media (width > 1250px) {
+@media (width > 991.5px) {
     .weather {
         width: 25%;
     }
