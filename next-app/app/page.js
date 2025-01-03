@@ -151,34 +151,36 @@ function WeatherData({ apiData }) {
       </div>
 
       {/* Scroll menu for the weekdays */}
-      <div className="scrollmenu">
-        <div className="btn-group" role="group">
-          {apiData.map((value, index) => {
-            const d = new Date(value.date);
-            let day = weekday[d.getDay()];
-            const judge = {
-              kms: 'this is not peak',
-              'this is peak piko weather': 'this is peak',
-            };
+      <div className="container-sm">
+        <div className="scrollmenu rounded">
+          <div className="btn-group" role="group">
+            {apiData.map((value, index) => {
+              const d = new Date(value.date);
+              let day = weekday[d.getDay()];
+              const judge = {
+                kms: 'this is not peak',
+                'this is peak piko weather': 'this is peak',
+              };
 
-            return (
-              <OverlayTrigger
-                key={value.date}
-                overlay={<Tooltip>{judge[value.judgement]}</Tooltip>}
-              >
-                <Button
-                  type="button"
-                  className="btn-sm btn-secondary"
-                  data-bs-target="#weatherCarousel"
-                  data-bs-slide-to={index}
-                  variant={`${value.judgement === 'kms' ? '' : 'success'}`}
+              return (
+                <OverlayTrigger
+                  key={value.date}
+                  overlay={<Tooltip>{judge[value.judgement]}</Tooltip>}
                 >
-                  <b>{index === 0 ? 'Today' : day}</b>
-                  <h1>{value.temperature}°F</h1>
-                </Button>
-              </OverlayTrigger>
-            );
-          })}
+                  <Button
+                    type="button"
+                    className="btn-sm btn-secondary"
+                    data-bs-target="#weatherCarousel"
+                    data-bs-slide-to={index}
+                    variant={`${value.judgement === 'kms' ? '' : 'success'}`}
+                  >
+                    <b>{index === 0 ? 'Today' : day}</b>
+                    <h1>{value.temperature}°F</h1>
+                  </Button>
+                </OverlayTrigger>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
