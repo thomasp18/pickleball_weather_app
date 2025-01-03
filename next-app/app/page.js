@@ -124,9 +124,6 @@ function WeatherData({ apiData }) {
                             Judgement: <b>{value.judgement}</b>
                           </p>
                         </div>
-                        {/* <div className='col-sm'>
-                          <button className="btn btn-secondary" onClick={() => setMarked(!marked)}>mark</button>
-                        </div> */}
                       </div>
                     </div>
                   </div>
