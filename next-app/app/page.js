@@ -22,11 +22,9 @@ export default function Home() {
   return (
     <div>
       <h1 className="display-1 text-center p-auto m-auto pt-2">PikoWeatherer</h1>
-      <br />
       <div className="text-center">
         <WeatherData apiData={response} />
       </div>
-      <br />
       <div className="text-center mt-2 mb-4">
         <a className="btn btn-primary" href="/score">
           Play Now!
@@ -89,7 +87,7 @@ function WeatherData({ apiData }) {
   return (
     <>
       {/* Weather data carousel */}
-      <div className="container-sm">
+      <div className="container-sm my-3">
         <div id="weatherCarousel" className="carousel slide" data-bs-ride="false">
           <div className="carousel-inner">
             {apiData.map((value, index) => {
@@ -152,8 +150,6 @@ function WeatherData({ apiData }) {
         </div>
       </div>
 
-      <br />
-
       {/* Scroll menu for the weekdays */}
       <div className="scrollmenu">
         <div className="btn-group" role="group">
@@ -172,7 +168,7 @@ function WeatherData({ apiData }) {
               >
                 <Button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn-sm btn-secondary"
                   data-bs-target="#weatherCarousel"
                   data-bs-slide-to={index}
                   variant={`${value.judgement === 'kms' ? '' : 'success'}`}
