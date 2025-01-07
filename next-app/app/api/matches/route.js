@@ -7,14 +7,14 @@ const sql = postgres('postgresql://piko:pikopw@localhost:5432/piko-db?ssl=false'
 });
 
 export async function GET() {
-  return NextResponse.json(
-    await sql`
+  const matchesData = await sql`
     SELECT match_id, mdate, ascore, bscore, player_id, team, pname
     FROM matches m
     JOIN matches_players_rel mpr on m.id = mpr.match_id
     JOIN players p on mpr.player_id = p.id;
-  `,
-  );
+  `;
+  const formattedMatchesData = formatMatches(matchesData);
+  return NextResponse.json(formattedMatchesData);
 }
 
 export async function POST(request) {
@@ -33,4 +33,28 @@ export async function POST(request) {
   await sql`INSERT INTO matches_players_rel ${sql(players, 'match_id', 'player_id', 'team')}`;
 
   return NextResponse.json(match);
+}
+
+// Formats the data by condensing each match to 1 line, adding the players and their respective teams, and removing unnecessary information (pname, team, player_id).
+function formatMatches(matchData) {
+  let formatted = [];
+  let players = { teamA: [], teamB: [] };
+  for (let i = 0; i < matchData.length; i++) {
+    const { pname, team, player_id, ...rest } = matchData[i];
+    if (team === 'a') {
+      players.teamA.push({ player_id, pname });
+    } else {
+      players.teamB.push({ player_id, pname });
+    }
+
+    if (i === matchData.length - 1 || matchData[i].match_id !== matchData[i + 1].match_id) {
+      Object.assign(rest, players);
+      rest.mdate = new Date(
+        rest.mdate.toISOString().slice(0, 10) + 'T00:00:00.000-05:00',
+      ).toDateString();
+      formatted.push(rest);
+      players = { teamA: [], teamB: [] };
+    }
+  }
+  return formatted;
 }

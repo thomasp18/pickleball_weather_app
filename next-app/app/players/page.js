@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import '../mobile.css';
 
 export default function Players() {
   const {
@@ -82,7 +83,7 @@ export default function Players() {
 
   return (
     <div className="container-sm d-flex flex-column">
-      <h1 className="display-3">Players</h1>
+      <h1 className="display-3 title">Players</h1>
 
       {/* Settings */}
       <div className="my-3">
@@ -148,12 +149,21 @@ function calculatePlayerStats(players, matches) {
     }
   });
 
-  matches.forEach(({ player_id, team, ascore, bscore }) => {
-    const player = playerStats[player_id];
+  function calculateWinRate(id, winner, loser) {
+    const player = playerStats[id];
     player.matches += 1;
-    if ((team === 'a' && ascore > bscore) || (team === 'b' && bscore > ascore)) {
+    if (winner > loser) {
       player.wins += 1;
     }
+  }
+
+  matches.forEach(({ teamA, teamB, ascore, bscore }) => {
+    teamA.forEach(({ player_id }) => {
+      calculateWinRate(player_id, ascore, bscore);
+    });
+    teamB.forEach(({ player_id }) => {
+      calculateWinRate(player_id, bscore, ascore);
+    });
   });
 
   for (const p in playerStats) {
