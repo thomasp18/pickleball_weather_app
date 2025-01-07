@@ -97,12 +97,12 @@ function WeatherData({ apiData }) {
                 <div key={apiDate} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
                   <div className={`card text-center ${markDay}`}>
                     <div className="card-body text-center">
-                      <div class="container">
-                        <div class="row align-items-center gx-4">
-                          <div class="col text-end">
+                      <div className="container">
+                        <div className="row align-items-center gx-4">
+                          <div className="col text-end">
                             <i className={weatherIcon} style={{ fontSize: '100px' }}></i>
                           </div>
-                          <div class="col text-start gx-1">
+                          <div className="col text-start gx-1">
                             <h1 className="my-0">{index === 0 ? 'Today' : day}</h1>
                             <p className="text-body-secondary my-0">
                               <small>{apiDate}</small>
