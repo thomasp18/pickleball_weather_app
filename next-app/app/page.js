@@ -112,23 +112,23 @@ function WeatherData({ apiData }) {
                           <tbody>
                             <tr>
                               <td>Temperature</td>
-                              <td className="text-end">{value.temperature}°F</td>
+                              <td className="text-end fw-bold">{value.temperature}°F</td>
                             </tr>
                             <tr>
                               <td>Humidity</td>
-                              <td className="text-end">{value.humidity}%</td>
+                              <td className="text-end fw-bold">{value.humidity}%</td>
                             </tr>
                             <tr>
                               <td>Wind</td>
-                              <td className="text-end">{value.wind} mph</td>
+                              <td className="text-end fw-bold">{value.wind} mph</td>
                             </tr>
                             <tr>
                               <td>Rain Chance</td>
-                              <td className="text-end">{value.precipitation}%</td>
+                              <td className="text-end fw-bold">{value.precipitation}%</td>
                             </tr>
                             <tr>
                               <td>Condition</td>
-                              <td className="text-end">{value.weathercode}</td>
+                              <td className="text-end fw-bold">{value.weathercode}</td>
                             </tr>
                           </tbody>
                         </table>
