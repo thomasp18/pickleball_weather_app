@@ -37,8 +37,6 @@ export default function Home() {
 // Displays the weather data in a more readable state
 function WeatherData({ apiData }) {
   // Seperate the API data from today and the rest of the week
-  const todayData = apiData[0];
-  const future = apiData.slice(1, 7);
   const [marked, setMarked] = useState(false);
   const markDay = marked ? 'marked' : '';
 
