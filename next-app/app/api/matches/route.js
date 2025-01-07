@@ -47,7 +47,6 @@ function formatMatches(matchData) {
       players.teamB.push({ player_id, pname });
     }
 
-    // run this right before match cutover (on the last item in data for a match)
     if (i === matchData.length - 1 || matchData[i].match_id !== matchData[i + 1].match_id) {
       Object.assign(rest, players);
       rest.mdate = new Date(

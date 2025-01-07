@@ -25,18 +25,13 @@ export default function Home() {
   const [dateRequested, setDateRequested] = useState(null);
 
   function scheduleDupe(date) {
-    let duplicate = false;
-
-    schedule.forEach((schedule) => {
+    const dupe = (schedule) => {
       const { sdate } = schedule;
       const formatSdate = new Date(sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
+      return formatSdate === date.toDateString();
+    };
 
-      if (formatSdate === date.toDateString()) {
-        duplicate = true;
-      }
-    });
-
-    return duplicate;
+    return schedule.some(dupe);
   }
 
   async function addDate(scheduleDate) {
@@ -110,8 +105,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className="display-1 text-center p-auto m-auto pt-2 title">PikoWeatherer</h1>
-      <br />
+      <h1 className="display-1 text-center p-auto m-auto mb-3 pt-2 title">PikoWeatherer</h1>
       <div className="text-center">
         <WeatherData
           weatherData={weather}
@@ -133,6 +127,45 @@ export default function Home() {
   );
 }
 
+const weekday = {
+  1: 'Monday',
+  2: 'Tuesday',
+  3: 'Wednesday',
+  4: 'Thursday',
+  5: 'Friday',
+  6: 'Saturday',
+  0: 'Sunday',
+};
+const icon = {
+  'Clear sky': 'qi-100',
+  'Mainly clear': 'qi-102',
+  'Partly cloudy': 'qi-103',
+  Overcast: 'qi-104',
+  Fog: 'qi-501',
+  'Depositing Rime Fog': 'qi-2377',
+  'Light drizzle': 'qi-309',
+  'Moderate drizzle': 'qi-311',
+  'Dense drizzle': 'qi-312',
+  'Light freezing drizzle': 'qi-2214',
+  'Dense freezing drizzle': 'qi-2214',
+  'Slight rain': 'qi-305',
+  'Moderate rain': 'qi-306',
+  'Heavy rain': 'qi-307',
+  'Light freezing rain': 'qi-313',
+  'Heavy freezing rain': 'qi-313-fill',
+  'Slight snow fall': 'qi-400',
+  'Moderate snow fall': 'qi-401',
+  'Heavy snow fall': 'qi-402',
+  'Snow grains': 'qi-1040',
+  'Slight rain showers': 'qi-300',
+  'Moderate rain showers': 'qi-301',
+  'Violent rain showers': 'qi-301-fill',
+  'Slight snow showers': 'qi-406',
+  'Heavy snow showers': 'qi-406-fill',
+  'Slight or moderate thunderstorm': 'qi-303-fill',
+  'Slight hail thunderstorm': 'qi-304',
+  'Heavy hail thunderstorm': 'qi-304-fill',
+};
 // Displays the weather data in a more readable state
 function WeatherData({
   weatherData,
@@ -143,46 +176,6 @@ function WeatherData({
   dupe,
   undoDate,
 }) {
-  const weekday = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    0: 'Sunday',
-  };
-  const icon = {
-    'Clear sky': 'qi-100',
-    'Mainly clear': 'qi-102',
-    'Partly cloudy': 'qi-103',
-    Overcast: 'qi-104',
-    Fog: 'qi-501',
-    'Depositing Rime Fog': 'qi-2377',
-    'Light drizzle': 'qi-309',
-    'Moderate drizzle': 'qi-311',
-    'Dense drizzle': 'qi-312',
-    'Light freezing drizzle': 'qi-2214',
-    'Dense freezing drizzle': 'qi-2214',
-    'Slight rain': 'qi-305',
-    'Moderate rain': 'qi-306',
-    'Heavy rain': 'qi-307',
-    'Light freezing rain': 'qi-313',
-    'Heavy freezing rain': 'qi-313-fill',
-    'Slight snow fall': 'qi-400',
-    'Moderate snow fall': 'qi-401',
-    'Heavy snow fall': 'qi-402',
-    'Snow grains': 'qi-1040',
-    'Slight rain showers': 'qi-300',
-    'Moderate rain showers': 'qi-301',
-    'Violent rain showers': 'qi-301-fill',
-    'Slight snow showers': 'qi-406',
-    'Heavy snow showers': 'qi-406-fill',
-    'Slight or moderate thunderstorm': 'qi-303-fill',
-    'Slight hail thunderstorm': 'qi-304',
-    'Heavy hail thunderstorm': 'qi-304-fill',
-  };
-
   return (
     <>
       {/* Weather data carousel */}

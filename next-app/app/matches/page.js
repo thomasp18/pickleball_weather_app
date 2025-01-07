@@ -25,8 +25,7 @@ export default function Main() {
   // Once there're no errors and is done loading, render the match data
   return (
     <div>
-      <h1 className="display-1 text-center p-auto m-auto pt-2 title">Match History</h1>
-      <br />
+      <h1 className="display-1 text-center p-auto m-auto mb-4 pt-2 title">Match History</h1>
       <MatchData matches={matchesDB} />
     </div>
   );
@@ -79,16 +78,14 @@ function MatchData({ matches }) {
 }
 
 function reformatMatches(matches) {
-  const reformat = matches.map((value) => {
-    const { teamA, teamB, ...rest } = value;
-    const a = value.teamA.map((a) => {
+  const reformat = matches.map((matchData) => {
+    const { teamA, teamB, ...rest } = matchData;
+    rest.teamA = teamA.map((a) => {
       return a.pname;
     });
-    const b = value.teamB.map((b) => {
+    rest.teamB = teamB.map((b) => {
       return b.pname;
     });
-    rest.teamA = a;
-    rest.teamB = b;
     return rest;
   });
   return reformat;

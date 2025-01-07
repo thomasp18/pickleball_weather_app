@@ -51,10 +51,8 @@ export default function Main() {
 
   return (
     <div>
-      <h1 className="display-1 text-center p-auto m-auto pt-2 title">Schedule</h1>
-      <br />
+      <h1 className="display-1 text-center p-auto m-auto mb-3 pt-2 title">Schedule</h1>
       <ScheduleData schedule={scheduleDB} matches={matchesDB} unschedule={unschedule} />
-      {/* <ConfirmationModal></ConfirmationModal> */}
     </div>
   );
 }
@@ -80,7 +78,7 @@ function ScheduleData({ schedule, matches, unschedule }) {
                   <Accordion.Body>
                     <div>{matchesTable(reformat, scheddate)}</div>
                     <div className="text-end">
-                      <ConfirmationModal
+                      <DeleteConfirmationModal
                         unscheduleID={() => unschedule(id)}
                         unscheduledDate={scheddate}
                       />
@@ -105,14 +103,12 @@ function ScheduleData({ schedule, matches, unschedule }) {
 function reformatMatches(matches) {
   const reformat = matches.map((match) => {
     const { teamA, teamB, ...rest } = match;
-    const a = match.teamA.map((a) => {
+    rest.teamA = match.teamA.map((a) => {
       return a.pname;
     });
-    const b = match.teamB.map((b) => {
+    rest.teamB = match.teamB.map((b) => {
       return b.pname;
     });
-    rest.teamA = a;
-    rest.teamB = b;
     return rest;
   });
   return reformat;
@@ -158,7 +154,7 @@ function matchesTable(matchesArr, scheduleDate) {
   }
 }
 
-function ConfirmationModal({ unscheduleID, unscheduledDate }) {
+function DeleteConfirmationModal({ unscheduleID, unscheduledDate }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleClose = () => setShowDeleteModal(false);
   const handleShow = () => setShowDeleteModal(true);
