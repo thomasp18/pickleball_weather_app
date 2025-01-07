@@ -82,7 +82,6 @@ function WeatherData({ apiData }) {
     'Slight hail thunderstorm': 'qi-304',
     'Heavy hail thunderstorm': 'qi-304-fill',
   };
-  let todayWIcon = icon[todayData.weathercode];
 
   return (
     <>
