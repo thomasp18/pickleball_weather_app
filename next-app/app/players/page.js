@@ -24,14 +24,14 @@ export default function Players() {
   } = useRequest('GET', '/api/matches');
   const [playerName, setPlayerName] = useState('');
   const [playerRequested, setPlayerRequested] = useState(null);
+  const [disableRequestPlayer, setDisableRequestPlayer] = useState(false);
   const playerStats = !playersLoading && !matchesLoading && calculatePlayerStats(players, matches);
 
-  async function AddPlayer(playerName) {
+  async function requestPlayer(playerName) {
     if (playerName === '') {
       return;
     }
 
-    const url = '/api/players';
     let duplicate = false;
 
     players.forEach((player) => {
@@ -43,9 +43,15 @@ export default function Players() {
 
     if (duplicate) {
       setPlayerRequested('error');
-      return;
+    } else {
+      setPlayerRequested('confirm');
     }
+  }
 
+  async function addPlayer(playerName) {
+    setDisableRequestPlayer(true);
+
+    const url = '/api/players';
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -61,6 +67,7 @@ export default function Players() {
 
       refetch();
       setPlayerRequested('success');
+      setDisableRequestPlayer(false);
     } catch (error) {
       console.error(error.message);
     }
@@ -79,9 +86,9 @@ export default function Players() {
       <h1 className="display-3 title">Players</h1>
 
       {/* Settings */}
-      <div>
+      <div className="my-3">
         <label htmlFor="playerName" className="form-label">
-          Settings
+          Add a new player?
         </label>
         <div className="input-group">
           <input
@@ -97,14 +104,13 @@ export default function Players() {
             value={playerName}
           />
           <button
-            className="btn btn-outline-secondary"
+            className={`btn btn-outline-secondary ${disableRequestPlayer && 'disabled'}`}
             type="button"
-            onClick={() => AddPlayer(playerName)}
+            onClick={() => requestPlayer(playerName)}
           >
-            Add player
+            <i className="bi bi-person-plus-fill"></i>
           </button>
         </div>
-        <div className="form-text mb-2">Add a new player?</div>
       </div>
 
       {/* Table */}
@@ -128,6 +134,7 @@ export default function Players() {
         setPlayerName={setPlayerName}
         playerRequested={playerRequested}
         setPlayerRequested={setPlayerRequested}
+        addPlayer={addPlayer}
       />
     </div>
   );
@@ -218,7 +225,43 @@ function PlayerData({ players, playerStats }) {
   ));
 }
 
-function PlayerModal({ playerName, setPlayerName, playerRequested, setPlayerRequested }) {
+function PlayerModal({
+  playerName,
+  setPlayerName,
+  playerRequested,
+  setPlayerRequested,
+  addPlayer,
+}) {
+  let modalTitle;
+  let modalBody;
+
+  switch (playerRequested) {
+    case 'error':
+      modalTitle = 'Error';
+      modalBody = (
+        <p>
+          <b>{playerName}</b> is non-unique! Use a different name.
+        </p>
+      );
+      break;
+    case 'confirm':
+      modalTitle = 'Confirm';
+      modalBody = (
+        <p>
+          Add player <b>{playerName}</b>?
+        </p>
+      );
+      break;
+    case 'success':
+      modalTitle = 'Success';
+      modalBody = (
+        <p>
+          <b>{playerName}</b> was added to the player list!
+        </p>
+      );
+      break;
+  }
+
   return (
     <Modal
       show={playerRequested}
@@ -230,30 +273,38 @@ function PlayerModal({ playerName, setPlayerName, playerRequested, setPlayerRequ
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {playerRequested === 'success' ? 'Success' : 'Error'}
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">{modalTitle}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        {playerRequested === 'success' ? (
-          <p>
-            <b>{playerName}</b> was added to the player list!
-          </p>
-        ) : (
-          <p>
-            <b>{playerName}</b> is non-unique! Use a different name.
-          </p>
-        )}
-      </Modal.Body>
+      <Modal.Body>{modalBody}</Modal.Body>
       <Modal.Footer>
-        <Button
-          onClick={() => {
-            setPlayerRequested(null);
-            setPlayerName('');
-          }}
-        >
-          Close
-        </Button>
+        {playerRequested === 'confirm' ? (
+          <>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setPlayerRequested(null);
+              }}
+            >
+              No
+            </Button>
+            <Button
+              onClick={() => {
+                setPlayerRequested(null);
+                addPlayer(playerName);
+              }}
+            >
+              Yes
+            </Button>
+          </>
+        ) : (
+          <Button
+            onClick={() => {
+              setPlayerRequested(null);
+            }}
+          >
+            Close
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );
