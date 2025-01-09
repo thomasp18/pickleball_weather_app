@@ -17,6 +17,15 @@ export async function GET() {
 
 export async function POST(request) {
   const { sdate } = await request.json();
+
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!sdate || typeof sdate !== 'string' || !regex.test(sdate)) {
+    return NextResponse.json(
+      { error: `${sdate} must be a non-empty string in format yyyy-mm-dd` },
+      { status: 400 },
+    );
+  }
+
   return NextResponse.json(
     await sql`
       INSERT INTO schedule (sdate)
