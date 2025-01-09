@@ -106,7 +106,6 @@ export default function Home() {
   return (
     <div>
       <h1 className="display-1 text-center p-auto m-auto pt-2 title">PikoWeatherer</h1>
-      <br />
       <div className="text-center">
         <WeatherData
           weatherData={weather}
