@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ListGroup, OverlayTrigger, Toast, ToastContainer } from 'react-bootstrap';
+import { OverlayTrigger, Toast, ToastContainer } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Error from './components/loading-and-error/error';
@@ -105,7 +105,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className="display-1 text-center p-auto m-auto mb-3 pt-2 title">PikoWeatherer</h1>
+      <h1 className="display-1 text-center p-auto m-auto pt-2 title">PikoWeatherer</h1>
       <div className="text-center">
         <WeatherData
           weatherData={weather}
@@ -117,8 +117,7 @@ export default function Home() {
           undoDate={undo}
         />
       </div>
-      <br />
-      <div className="text-center mt-2 mb-4">
+      <div className="text-center my-3">
         <a className="btn btn-primary" href="/score">
           Play Now!
         </a>
@@ -179,7 +178,7 @@ function WeatherData({
   return (
     <>
       {/* Weather data carousel */}
-      <div className="container-sm">
+      <div className="container-sm my-3">
         <div id="weatherCarousel" className="carousel slide" data-bs-ride="false">
           <div className="carousel-inner">
             {weatherData.map((value, index) => {
@@ -198,50 +197,48 @@ function WeatherData({
 
               return (
                 <div key={apiDate} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                  <div className="card text-center">
-                    <i className={`mb-0 ${weatherIcon}`} style={{ fontSize: '150px' }}></i>
+                  <div className={'card text-center'}>
                     <div className="card-body text-center">
-                      <div className="d-inline-block weather">
-                        <h5 className="text-center fs-3 mt-0 mb-0">
-                          <b>{index === 0 ? 'Today' : day}</b>
-                        </h5>
-                        <p className="card-title text-center mt-0 mb-0">
-                          <small className="text-body-secondary">{apiDate}</small>
-                        </p>
-                        <p className="card-text text-center fs-3 mt-0 mb-0">
-                          <b>{value.temperature}°F</b>
-                        </p>
-                        <ListGroup variant="flush">
-                          <ListGroup.Item className="card-text">
-                            <div className="float-start">Humidity </div>
-                            <div className="float-end">
-                              <b className="text-end">{value.humidity}%</b>
-                            </div>
-                          </ListGroup.Item>
-                          <ListGroup.Item className="card-text">
-                            <div className="float-start">Wind </div>
-                            <div className="float-end">
-                              <b>{value.wind} mph</b>
-                            </div>
-                          </ListGroup.Item>
-                          <ListGroup.Item className="card-text">
-                            <div className="float-start">Rain Chance </div>
-                            <div className="float-end">
-                              <b>{value.precipitation}%</b>
-                            </div>
-                          </ListGroup.Item>
-                          <ListGroup.Item className="card-text">
-                            <div className="float-start">Forecast </div>
-                            <div className="float-end">
-                              <b>{value.weathercode}</b>
-                            </div>
-                          </ListGroup.Item>
-                        </ListGroup>
+                      <div className="container">
+                        <div className="row align-items-center gx-4">
+                          <div className="col text-end">
+                            <i className={weatherIcon} style={{ fontSize: '100px' }}></i>
+                          </div>
+                          <div className="col text-start gx-1">
+                            <h1 className="my-0">{index === 0 ? 'Today' : day}</h1>
+                            <p className="text-body-secondary my-0">
+                              <small>{apiDate}</small>
+                            </p>
+                            <h1 className="fw-bold my-0">{value.temperature}°F</h1>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'inline-block', textAlign: 'left' }}>
+                        <table className="table">
+                          <tbody>
+                            <tr>
+                              <td>Humidity</td>
+                              <td className="text-end fw-bold">{value.humidity}%</td>
+                            </tr>
+                            <tr>
+                              <td>Wind</td>
+                              <td className="text-end fw-bold">{value.wind} mph</td>
+                            </tr>
+                            <tr>
+                              <td>Rain Chance</td>
+                              <td className="text-end fw-bold">{value.precipitation}%</td>
+                            </tr>
+                            <tr>
+                              <td>Condition</td>
+                              <td className="text-end fw-bold">{value.weathercode}</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                     <div className="card-footer text-center">
                       <div className="row justify-content-center">
-                        <div className="col-sm pb-1">
+                        <div className="col-sm">
                           <p className="card-text">
                             Judgement: <b>{value.judgement}</b>
                           </p>
@@ -302,7 +299,7 @@ function WeatherData({
             data-bs-target="#weatherCarousel"
             data-bs-slide="prev"
           >
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="carousel-control-prev-icon"></span>
             <span className="visually-hidden">Previous</span>
           </button>
           <button
@@ -312,50 +309,47 @@ function WeatherData({
             data-bs-slide="next"
             data-bs-theme="primary"
           >
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="carousel-control-next-icon"></span>
             <span className="visually-hidden">Next</span>
           </button>
         </div>
       </div>
 
-      <br />
-
       {/* Scroll menu for the weekdays */}
-      <div
-        className="scrollmenu"
-        style={{ marginLeft: '12px', marginRight: '12px', borderRadius: '6px' }}
-      >
-        <div className="btn-group" role="group" aria-label="Basic example">
-          {weatherData.map((value, index) => {
-            const d = new Date(value.date + 'T00:00:00.000-05:00');
-            let day = weekday[d.getDay()];
-            const judge = {
-              kms: 'this is not peak',
-              'this is peak piko weather': 'this is peak',
-            };
-            const scheduled = dupe(d);
+      <div className="container-sm">
+        <div className="scrollmenu rounded">
+          <div className="btn-group" role="group">
+            {weatherData.map((value, index) => {
+              const d = new Date(value.date + 'T00:00:00.000-05:00');
+              let day = weekday[d.getDay()];
+              const judge = {
+                kms: 'this is not peak',
+                'this is peak piko weather': 'this is peak',
+              };
+              const scheduled = dupe(d);
 
-            return (
-              <OverlayTrigger
-                key={value.date}
-                overlay={<Tooltip>{judge[value.judgement]}</Tooltip>}
-              >
-                <Button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-target="#weatherCarousel"
-                  data-bs-slide-to={index}
-                  variant={`${value.judgement !== 'kms' ? 'success' : ''}`}
+              return (
+                <OverlayTrigger
+                  key={value.date}
+                  overlay={<Tooltip>{judge[value.judgement]}</Tooltip>}
                 >
-                  <b>
-                    {index === 0 ? 'Today' : day}{' '}
-                    {scheduled ? <i className="bi bi-calendar-check"></i> : ''}
-                  </b>
-                  <h1>{value.temperature}°F</h1>
-                </Button>
-              </OverlayTrigger>
-            );
-          })}
+                  <Button
+                    type="button"
+                    className="btn-sm btn-secondary"
+                    data-bs-target="#weatherCarousel"
+                    data-bs-slide-to={index}
+                    variant={`${value.judgement !== 'kms' ? 'success' : ''}`}
+                  >
+                    <b>
+                      {index === 0 ? 'Today' : day}{' '}
+                      {scheduled ? <i className="bi bi-calendar-check"></i> : ''}
+                    </b>
+                    <h1>{value.temperature}°F</h1>
+                  </Button>
+                </OverlayTrigger>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
