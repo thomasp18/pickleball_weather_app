@@ -33,7 +33,7 @@ export default function Main() {
 
 // Displays the match history in a table
 function MatchData({ matches }) {
-  const reformatted = reformatMatches(matches);
+  const reformatted = reformatMatches(matches).toReversed();
 
   // Match history table
   return (
