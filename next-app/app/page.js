@@ -28,8 +28,7 @@ export default function Home() {
   function scheduleDupe(date) {
     const dupe = (schedule) => {
       const { sdate } = schedule;
-      const formatSdate = new Date(sdate.slice(0, 10) + 'T00:00:00.000-05:00').toDateString();
-      return formatSdate === date.toDateString();
+      return sdate === date;
     };
 
     return schedule.some(dupe);
@@ -187,7 +186,7 @@ function WeatherData({ weatherData, addDate, setShowScheduleToast, dupe, setDate
               const schedDate = () => {
                 setShowScheduleToast(false);
                 setTimeout(() => {
-                  addDate(d);
+                  addDate(apiDate);
                   setDateToAdd(apiDate);
                   setShowScheduleToast(true);
                 }, 0);
@@ -284,7 +283,7 @@ function WeatherData({ weatherData, addDate, setShowScheduleToast, dupe, setDate
                 kms: 'this is not peak',
                 'this is peak piko weather': 'this is peak',
               };
-              const scheduled = dupe(d);
+              const scheduled = dupe(value.date);
 
               return (
                 <OverlayTrigger
