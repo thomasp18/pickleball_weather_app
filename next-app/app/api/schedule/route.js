@@ -41,6 +41,21 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   const { id } = await request.json();
+
+  if (!id || !Number.isInteger(id) || id < 0) {
+    return NextResponse.json({ error: `${id} must be a positive integer` }, { status: 400 });
+  }
+
+  const requestedId = await sql`
+    SELECT 1
+    FROM schedule
+    WHERE id = ${id}
+  `;
+
+  if (requestedId.length == 0) {
+    return NextResponse.json({ error: `${id} does not exist` }, { status: 400 });
+  }
+
   return NextResponse.json(
     await sql`
       DELETE FROM schedule
