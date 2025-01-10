@@ -185,9 +185,12 @@ function WeatherData({ weatherData, addDate, setShowScheduleToast, dupe, setDate
               const day = weekday[d.getDay()];
               const weatherIcon = icon[value.weathercode];
               const schedDate = () => {
-                addDate(d);
-                setDateToAdd(apiDate);
-                setShowScheduleToast(true);
+                setShowScheduleToast(false);
+                setTimeout(() => {
+                  addDate(d);
+                  setDateToAdd(apiDate);
+                  setShowScheduleToast(true);
+                }, 0);
               };
 
               return (
