@@ -7,12 +7,17 @@ const sql = postgres('postgresql://piko:pikopw@localhost:5432/piko-db?ssl=false'
 });
 
 export async function GET() {
-  return NextResponse.json(
-    await sql`
-        select * from schedule
-        order by sdate
-    `,
-  );
+  const dates = await sql`
+  select * from schedule
+  order by sdate
+`;
+
+  const formattedDates = dates.map((d) => ({
+    id: d.id,
+    sdate: d.sdate.toISOString().split('T')[0],
+  }));
+
+  return NextResponse.json(formattedDates);
 }
 
 export async function POST(request) {
