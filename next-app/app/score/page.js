@@ -6,6 +6,7 @@ import useRequest from '@/utils/useRequest';
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import '../mobile.css';
 import './page.css';
 
 export default function Score() {
@@ -79,7 +80,7 @@ export default function Score() {
 
   return (
     <div className="container-sm d-flex flex-column">
-      <h1 className="display-3">Scorekeeper</h1>
+      <h1 className="display-3 title">Scorekeeper</h1>
       <div className="d-flex flex-column page justify-content-between align-items-center">
         {/* Game info */}
         <div className="pt-3">

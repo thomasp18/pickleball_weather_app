@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import '../mobile.css';
 
 export default function Players() {
   const {
@@ -23,15 +24,14 @@ export default function Players() {
   } = useRequest('GET', '/api/matches');
   const [playerName, setPlayerName] = useState('');
   const [playerRequested, setPlayerRequested] = useState(null);
-  const [disableAddPlayer, setDisableAddPlayer] = useState(false);
+  const [disableRequestPlayer, setDisableRequestPlayer] = useState(false);
   const playerStats = !playersLoading && !matchesLoading && calculatePlayerStats(players, matches);
 
-  async function addPlayer(playerName) {
+  async function requestPlayer(playerName) {
     if (playerName === '') {
       return;
     }
 
-    const url = '/api/players';
     let duplicate = false;
 
     players.forEach((player) => {
@@ -43,11 +43,15 @@ export default function Players() {
 
     if (duplicate) {
       setPlayerRequested('error');
-      return;
+    } else {
+      setPlayerRequested('confirm');
     }
+  }
 
-    setDisableAddPlayer(true);
+  async function addPlayer(playerName) {
+    setDisableRequestPlayer(true);
 
+    const url = '/api/players';
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -63,7 +67,7 @@ export default function Players() {
 
       refetch();
       setPlayerRequested('success');
-      setDisableAddPlayer(false);
+      setDisableRequestPlayer(false);
     } catch (error) {
       console.error(error.message);
     }
@@ -79,7 +83,7 @@ export default function Players() {
 
   return (
     <div className="container-sm d-flex flex-column">
-      <h1 className="display-3">Players</h1>
+      <h1 className="display-3 title">Players</h1>
 
       {/* Settings */}
       <div className="my-3">
@@ -100,11 +104,11 @@ export default function Players() {
             value={playerName}
           />
           <button
-            className={`btn btn-outline-secondary ${disableAddPlayer && 'disabled'}`}
+            className={`btn btn-outline-secondary ${disableRequestPlayer && 'disabled'}`}
             type="button"
-            onClick={() => addPlayer(playerName)}
+            onClick={() => requestPlayer(playerName)}
           >
-            <i class="bi bi-person-plus-fill"></i>
+            <i className="bi bi-person-plus-fill"></i>
           </button>
         </div>
       </div>
@@ -130,6 +134,7 @@ export default function Players() {
         setPlayerName={setPlayerName}
         playerRequested={playerRequested}
         setPlayerRequested={setPlayerRequested}
+        addPlayer={addPlayer}
       />
     </div>
   );
@@ -144,12 +149,21 @@ function calculatePlayerStats(players, matches) {
     }
   });
 
-  matches.forEach(({ player_id, team, ascore, bscore }) => {
-    const player = playerStats[player_id];
+  function calculateWinRate(id, winner, loser) {
+    const player = playerStats[id];
     player.matches += 1;
-    if ((team === 'a' && ascore > bscore) || (team === 'b' && bscore > ascore)) {
+    if (winner > loser) {
       player.wins += 1;
     }
+  }
+
+  matches.forEach(({ teamA, teamB, ascore, bscore }) => {
+    teamA.forEach(({ player_id }) => {
+      calculateWinRate(player_id, ascore, bscore);
+    });
+    teamB.forEach(({ player_id }) => {
+      calculateWinRate(player_id, bscore, ascore);
+    });
   });
 
   for (const p in playerStats) {
@@ -211,7 +225,43 @@ function PlayerData({ players, playerStats }) {
   ));
 }
 
-function PlayerModal({ playerName, setPlayerName, playerRequested, setPlayerRequested }) {
+function PlayerModal({
+  playerName,
+  setPlayerName,
+  playerRequested,
+  setPlayerRequested,
+  addPlayer,
+}) {
+  let modalTitle;
+  let modalBody;
+
+  switch (playerRequested) {
+    case 'error':
+      modalTitle = 'Error';
+      modalBody = (
+        <p>
+          <b>{playerName}</b> is non-unique! Use a different name.
+        </p>
+      );
+      break;
+    case 'confirm':
+      modalTitle = 'Confirm';
+      modalBody = (
+        <p>
+          Add player <b>{playerName}</b>?
+        </p>
+      );
+      break;
+    case 'success':
+      modalTitle = 'Success';
+      modalBody = (
+        <p>
+          <b>{playerName}</b> was added to the player list!
+        </p>
+      );
+      break;
+  }
+
   return (
     <Modal
       show={playerRequested}
@@ -223,30 +273,38 @@ function PlayerModal({ playerName, setPlayerName, playerRequested, setPlayerRequ
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {playerRequested === 'success' ? 'Success' : 'Error'}
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">{modalTitle}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        {playerRequested === 'success' ? (
-          <p>
-            <b>{playerName}</b> was added to the player list!
-          </p>
-        ) : (
-          <p>
-            <b>{playerName}</b> is non-unique! Use a different name.
-          </p>
-        )}
-      </Modal.Body>
+      <Modal.Body>{modalBody}</Modal.Body>
       <Modal.Footer>
-        <Button
-          onClick={() => {
-            setPlayerRequested(null);
-            setPlayerName('');
-          }}
-        >
-          Close
-        </Button>
+        {playerRequested === 'confirm' ? (
+          <>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setPlayerRequested(null);
+              }}
+            >
+              No
+            </Button>
+            <Button
+              onClick={() => {
+                setPlayerRequested(null);
+                addPlayer(playerName);
+              }}
+            >
+              Yes
+            </Button>
+          </>
+        ) : (
+          <Button
+            onClick={() => {
+              setPlayerRequested(null);
+            }}
+          >
+            Close
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );
