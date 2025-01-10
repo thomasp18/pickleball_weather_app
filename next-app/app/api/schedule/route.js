@@ -13,16 +13,30 @@ const sql = postgres({
 });
 
 export async function GET() {
-  return NextResponse.json(
-    await sql`
-        select * from schedule 
-        order by sdate
-    `,
-  );
+  const dates = await sql`
+  select * from schedule
+  order by sdate
+`;
+
+  const formattedDates = dates.map((d) => ({
+    id: d.id,
+    sdate: d.sdate.toISOString().split('T')[0],
+  }));
+
+  return NextResponse.json(formattedDates);
 }
 
 export async function POST(request) {
   const { sdate } = await request.json();
+
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!sdate || typeof sdate !== 'string' || !regex.test(sdate)) {
+    return NextResponse.json(
+      { error: `${sdate} must be a non-empty string in format yyyy-mm-dd` },
+      { status: 400 },
+    );
+  }
+
   return NextResponse.json(
     await sql`
       INSERT INTO schedule (sdate)
@@ -33,6 +47,21 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   const { id } = await request.json();
+
+  if (!id || !Number.isInteger(id) || id < 0) {
+    return NextResponse.json({ error: `${id} must be a positive integer` }, { status: 400 });
+  }
+
+  const requestedId = await sql`
+    SELECT 1
+    FROM schedule
+    WHERE id = ${id}
+  `;
+
+  if (requestedId.length == 0) {
+    return NextResponse.json({ error: `${id} does not exist` }, { status: 400 });
+  }
+
   return NextResponse.json(
     await sql`
       DELETE FROM schedule
