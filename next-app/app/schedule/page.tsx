@@ -72,20 +72,18 @@ function ScheduleData({ schedule, matches, unschedule }) {
             ).toDateString();
 
             return (
-              <div key={id}>
-                <Accordion.Item eventKey={id.toString()}>
-                  <Accordion.Header>{scheddate}</Accordion.Header>
-                  <Accordion.Body>
-                    <div>{matchesTable(reformat, scheddate)}</div>
-                    <div className="text-end">
-                      <DeleteConfirmationModal
-                        unscheduleID={() => unschedule(id)}
-                        unscheduledDate={scheddate}
-                      />
-                    </div>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </div>
+              <Accordion.Item key={id} eventKey={id.toString()}>
+                <Accordion.Header>{scheddate}</Accordion.Header>
+                <Accordion.Body>
+                  <div>{matchesTable(reformat, scheddate)}</div>
+                  <div className="text-end">
+                    <DeleteConfirmationModal
+                      unscheduleID={() => unschedule(id)}
+                      unscheduledDate={scheddate}
+                    />
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
             );
           })}
         </Accordion>
