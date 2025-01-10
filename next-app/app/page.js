@@ -21,8 +21,9 @@ export default function Home() {
     loading: scheduleLoading,
     refetch,
   } = useRequest('GET', '/api/schedule');
-  const [showToast, setShowToast] = useState(false);
   const [dateRequested, setDateRequested] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [dateToAdd, setDateToAdd] = useState(null);
 
   function scheduleDupe(date) {
     const dupe = (schedule) => {
@@ -110,11 +111,9 @@ export default function Home() {
         <WeatherData
           weatherData={weather}
           addDate={addDate}
-          showToast={showToast}
-          setShowToast={setShowToast}
-          dateRequested={dateRequested}
+          setShowScheduleToast={setShowToast}
           dupe={scheduleDupe}
-          undoDate={undo}
+          setDateToAdd={setDateToAdd}
         />
       </div>
       <div className="text-center my-3">
@@ -122,6 +121,13 @@ export default function Home() {
           Play Now!
         </a>
       </div>
+      <ScheduleToast
+        dateRequested={dateRequested}
+        showScheduleToast={showToast}
+        setShowScheduleToast={setShowToast}
+        undoDate={undo}
+        dateToAdd={dateToAdd}
+      ></ScheduleToast>
     </div>
   );
 }
@@ -166,15 +172,7 @@ const icon = {
   'Heavy hail thunderstorm': 'qi-304-fill',
 };
 // Displays the weather data in a more readable state
-function WeatherData({
-  weatherData,
-  addDate,
-  showToast,
-  setShowToast,
-  dateRequested,
-  dupe,
-  undoDate,
-}) {
+function WeatherData({ weatherData, addDate, setShowScheduleToast, dupe, setDateToAdd }) {
   return (
     <>
       {/* Weather data carousel */}
@@ -188,11 +186,8 @@ function WeatherData({
               const weatherIcon = icon[value.weathercode];
               const schedDate = () => {
                 addDate(d);
-                setShowToast(true);
-              };
-              const undoSchedDate = () => {
-                undoDate(apiDate);
-                setShowToast(false);
+                setDateToAdd(apiDate);
+                setShowScheduleToast(true);
               };
 
               return (
@@ -245,46 +240,6 @@ function WeatherData({
                           <Button type="button" onClick={schedDate}>
                             Schedule Date
                           </Button>
-                          <ToastContainer className="position-fixed p-3" position="bottom-end">
-                            <Toast
-                              style={{ backgroundColor: 'rgba(33, 37, 41, 1)' }}
-                              onClose={() => setShowToast(false)}
-                              show={showToast}
-                            >
-                              <Toast.Header>
-                                <strong className="me-auto">
-                                  {dateRequested === 'success'
-                                    ? 'Date scheduled'
-                                    : 'Date already scheduled'}
-                                </strong>
-                              </Toast.Header>
-                              <Toast.Body style={{ whiteSpace: 'nowrap' }}>
-                                {dateRequested === 'success' ? (
-                                  <div>
-                                    <p>
-                                      The date &apos;<b>{apiDate}</b>&apos; was added to the
-                                      schedule!
-                                    </p>
-                                    <div>
-                                      <Button className="mx-1" onClick={undoSchedDate}>
-                                        Undo
-                                      </Button>
-                                      <Button className="mx-1" href="/schedule">
-                                        Go to schedule <i className="bi bi-caret-right-fill"></i>
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <p>This date is already scheduled.</p>
-                                    <Button className="mx-1" href="/schedule">
-                                      Go to schedule <i className="bi bi-caret-right-fill"></i>
-                                    </Button>
-                                  </div>
-                                )}
-                              </Toast.Body>
-                            </Toast>
-                          </ToastContainer>
                         </div>
                       </div>
                     </div>
@@ -353,6 +308,60 @@ function WeatherData({
         </div>
       </div>
     </>
+  );
+}
+
+function ScheduleToast({
+  dateRequested,
+  showScheduleToast,
+  setShowScheduleToast,
+  undoDate,
+  dateToAdd,
+}) {
+  const undoSchedDate = () => {
+    undoDate(dateToAdd);
+    setShowScheduleToast(false);
+  };
+  return (
+    <ToastContainer className="position-fixed p-3" position="bottom-end">
+      <Toast
+        style={{ backgroundColor: 'rgba(33, 37, 41, 1)' }}
+        onClose={() => setShowScheduleToast(false)}
+        show={showScheduleToast}
+        delay={6000}
+        autohide
+      >
+        <Toast.Header>
+          <strong className="me-auto">
+            {dateRequested === 'success' ? 'Date scheduled' : 'Date already scheduled'}
+          </strong>
+        </Toast.Header>
+        <Toast.Body style={{ whiteSpace: 'nowrap' }}>
+          {dateRequested === 'success' ? (
+            <div>
+              <p>
+                The date &apos;<b>{dateToAdd}</b>&apos; was added to the schedule!
+              </p>
+              <div>
+                <Button className="mx-1" onClick={undoSchedDate}>
+                  Undo
+                </Button>
+                <Button className="mx-1" href="/schedule">
+                  Go to schedule <i className="bi bi-caret-right-fill"></i>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p>This date is already scheduled.</p>
+              <Button className="mx-1" href="/schedule">
+                Go to schedule <i className="bi bi-caret-right-fill"></i>
+              </Button>
+            </div>
+          )}
+        </Toast.Body>
+      </Toast>
+    </ToastContainer>
   );
 }
 
