@@ -5,49 +5,41 @@ const WEATHER_URL =
 //(universal timezone) "https://api.open-meteo.com/v1/forecast?latitude=38.86&longitude=-77.63&hourly=relative_humidity_2m&daily=weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=GMT";
 const TIME_FOR_HUMIDITY = 19;
 
-// Optimal weather conditions
-// 55 to 80 degrees
-// < 90% humidity
-// < 10mph wind
-// 0% precipitation
-// clouds: clear, mostly clear, partly cloudy, overcast
-
-// precipitation highest, weathercode high, temp mid, humid low, wind lowest
-// 35 + 30 + 20 + 10 + 5 = 100
 function optCalc(WeatherData) {
   const { temperature, humidity, wind, precipitation, weathercode } = WeatherData;
   let tempWeight = 20;
   let humidWeight = 10;
-  let windWeight = 5;
-  let precipWeight = 35 - Math.min(35, precipitation);
-  let wcodeWeight = 30;
 
-  if (!(weathercode === 0 || weathercode === 1 || weathercode === 2 || weathercode === 3)) {
-    wcodeWeight = 0;
+  if (weathercode > 3) {
+    return 'kms';
   }
-  if (temperature <= 35) {
-    tempWeight = 0;
-  } else if (temperature > 35 && temperature < 55) {
-    tempWeight -= temperature - 55;
-  } else if (temperature > 80) {
-    tempWeight -= Math.min(20, temperature - 80);
+  if (temperature < 50 || temperature > 90) {
+    return 'kms';
+  } else {
+    tempWeight -= Math.abs(temperature - 70);
   }
-  if (temperature > 75) {
-    if (humidity > 90) {
-      humidWeight -= humidity - 90;
+  if (temperature > 65) {
+    if (humidity > 50) {
+      humidWeight -= humidity - 50;
     }
   } else {
-    if (humidity > 90) {
-      humidWeight -= (humidity - 90) / 2;
+    if (humidity > 70) {
+      humidWeight -= (humidity - 70) / 2;
     }
   }
+  if (humidWeight <= 0) {
+    return 'kms';
+  }
   if (wind > 10) {
-    windWeight = 0;
+    return 'kms';
+  }
+  if (precipitation > 0) {
+    return 'kms';
   }
 
-  const totWeight = tempWeight + humidWeight + windWeight + precipWeight + wcodeWeight;
+  const totWeight = tempWeight + humidWeight;
 
-  if (totWeight > 80) {
+  if (totWeight > 10) {
     return 'this is peak piko weather';
   }
   return 'kms';
