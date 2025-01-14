@@ -2,7 +2,66 @@
 
 Welcome to the Pickleball Weather App!
 
-## Spinnig up the Environment
+## Features
+
+### Homepage
+
+- Shows the weather
+- Assesses the optimal days to play pickleball using dynamically loaded weather forecast
+- Allows scheduling of days to play
+
+### Schedule
+
+- Displays the days you've scheduled to play
+- Shows the games you play on those scheduled days
+- Allows deletion of scheduled days
+
+### Scorekeeper
+
+- Keeps track of a game's state
+  - Custom game rules
+  - Team score
+  - Ball possession
+  - Players on each team
+  - Tells you when someone wins
+- If there are players, the match data is saved to our database
+
+### Matches
+
+- Displays a table of all the matches we store
+
+### Players
+
+- Lists all of the registered players
+- Allows adding new players
+- Shows player stats like winrate and titles that are computed based on their stats
+
+## Pictures!
+
+![Homepage](./readme-src/home.png)
+
+![Schedule Page](./readme-src/schedule.png)
+
+![Scorekeeper Page](./readme-src/scorekeeper.png)
+
+![Matches Page](./readme-src/matches.png)
+
+![Players Page](./readme-src/players.png)
+
+## Cool Developments and Technologies in this project
+
+- Next JS (React JS)
+- Bootstrap
+- Responsive Design (Desktop + Mobile view)
+- Typescript
+- Project-wide formatting and linting rules
+- Dockerized development environment dependencies
+- Parameterized environment variables
+- Frontend and backend validation
+- Stores data in PostgreSQL
+- Many refactors along the way
+
+## Spinning up the Environment
 
 ### Required Software
 
@@ -11,64 +70,22 @@ Welcome to the Pickleball Weather App!
 
 ### Creating our Database
 
-`sudo docker network create -d bridge piko-net`
+Spin up a PostgreSQL database using docker. Make sure the values in the .env file match the values you set up the database with.
 
-`sudo docker run --name piko-db -p 5432:5432 --network=piko-net -e POSTGRES_DB=piko-db -e POSTGRES_USER=piko -e POSTGRES_PASSWORD=pikopw -v piko-db:/var/lib/postgresql/data -d postgres`
-
-`sudo docker run --name pgadmin -p 8080:80 --network=piko-net -e PGADMIN_DEFAULT_EMAIL=piko@bt.com -e PGADMIN_DEFAULT_PASSWORD=pikopw -v pgadmin-data:/var/lib/pgadmin -d dpage/pgadmin4`
+```sh
+POSTGRES_DB={POSTGRES_DB}
+POSTGRES_USER={POSTGRES_USER}
+POSTGRES_PASSWORD={POSTGRES_PASSWORD}
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_SSL_ENABLED=false
+```
 
 ### Starting NextJs
 
-`npm run dev`
+Install the node modules in the `/next-app` directory and run the server
 
-
-
-
-# Match History Feature
-
-PAGES
-Match History Page
-- list of matches (in a table)
-  - players (on teams)
-  - score
-  - date
-
-Players Page
-- list all players
-- click a player for more info
-  - match history
-  - win rate
-    - titles (e.g., farmer, shitter)
-- Register Players
-
-Schedule Page
-- mark dates for when people want to play
-- list
-- show matches that happened on a day in the day (accordion)
-
-Nav bar
-
-Input matches
-- score page -> save match
-
-
-DATA IMPLEMENTATION
-Store Match History
-- match_id
-- Scores
-  - team A score
-  - team B score
-- Players
-  - which team
-  - player-id
-  - first name
-- game date
-Schedule (Marked Days)
-- dates list
-
-
-Tables
-- Matches <- MatchPlayer -> Players
-- Schedule (Marked Days)
+`npm ci`
+`npm run start`
 
 🐵
