@@ -60,6 +60,16 @@ Welcome to the Pickleball Weather App!
 - Frontend and backend validation
 - Stores data in PostgreSQL
 - Many refactors along the way
+- CDK automated deployment
+- Deployed onto AWS EC2 using CDK/Cloudformation
+
+## Deployment Instructions
+
+1. Install AWS CDK CLI
+2. Log into AWS CLI
+3. cd into banana-infrastructure directory
+4. Bootstrap `cdk bootstrap`
+5. Deploy! `cdk deploy`
 
 ## Spinning up the Environment
 
