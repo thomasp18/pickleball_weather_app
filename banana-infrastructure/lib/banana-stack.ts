@@ -6,11 +6,6 @@ export class BananaCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // ALEX REQUIERMENTS
-    // ✅ t3.medium
-    // ✅ amazon linux 2023
-    // ✅ config security group
-    // pass in user data
     const defaultVpc = ec2.Vpc.fromLookup(this, 'Vpc', {
       isDefault: true,
     });
