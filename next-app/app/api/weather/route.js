@@ -11,10 +11,10 @@ function optCalc(WeatherData) {
   let humidWeight = 10;
 
   if (weathercode > 3) {
-    return 'kms';
+    return 'not peak';
   }
   if (temperature < 50 || temperature > 90) {
-    return 'kms';
+    return 'not peak';
   } else {
     tempWeight -= Math.abs(temperature - 70);
   }
@@ -28,21 +28,21 @@ function optCalc(WeatherData) {
     }
   }
   if (humidWeight <= 0) {
-    return 'kms';
+    return 'not peak';
   }
   if (wind > 10) {
-    return 'kms';
+    return 'not peak';
   }
   if (precipitation > 0) {
-    return 'kms';
+    return 'not peak';
   }
 
   const totWeight = tempWeight + humidWeight;
 
   if (totWeight > 10) {
-    return 'this is peak piko weather';
+    return 'peak';
   }
-  return 'kms';
+  return 'not peak';
 }
 
 // Variable of objects to identify and return each day's weather code as a description
