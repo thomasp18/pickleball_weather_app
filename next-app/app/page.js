@@ -237,7 +237,12 @@ function WeatherData({ weatherData, addDate, setShowScheduleToast, dupe, setDate
                       <div className="row justify-content-center">
                         <div className="col-sm">
                           <p className="card-text">
-                            Judgement: <b>{value.judgement === 'peak' ? 'This is perfect weather for pickleball!' : 'Probably best to stay inside.'}</b>
+                            Judgement:{' '}
+                            <b>
+                              {value.judgement === 'peak'
+                                ? 'This is perfect weather for pickleball!'
+                                : 'Probably best to stay inside.'}
+                            </b>
                           </p>
                           <Button type="button" onClick={schedDate}>
                             Schedule Date
@@ -281,7 +286,7 @@ function WeatherData({ weatherData, addDate, setShowScheduleToast, dupe, setDate
               let day = weekday[d.getDay()];
               const judge = {
                 'not peak': 'this is not peak',
-                'peak': 'this is peak',
+                peak: 'this is peak',
               };
               const scheduled = dupe(value.date);
 
